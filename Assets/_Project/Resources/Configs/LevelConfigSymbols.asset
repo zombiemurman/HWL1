@@ -13,6 +13,15 @@ MonoBehaviour:
   m_Name: LevelConfigSymbols
   m_EditorClassIdentifier: 
   <TypeGame>k__BackingField: 1
-  <Symbols>k__BackingField: []
+  <Symbols>k__BackingField:
+  - q
+  - w
+  - e
+  - a
+  - s
+  - d
+  - z
+  - x
+  - c
   <EquallyWin>k__BackingField: 3
   <NoEquallyDefeat>k__BackingField: 3

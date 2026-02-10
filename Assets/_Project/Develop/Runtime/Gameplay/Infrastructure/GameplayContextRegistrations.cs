@@ -1,9 +1,11 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.Config;
 using Assets._Project.Develop.Runtime.Gameplay.Game;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
-using Assets._Project.Develop.Runtime.Utilities.AssetsManagment;
+using Assets._Project.Develop.Runtime.Meta;
+using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
+using Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
-using System;
+using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 {
@@ -20,6 +22,27 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             container.RegisterAsSingle(CreateGameRandomSymbol);
             container.RegisterAsSingle(CreateRules);
             container.RegisterAsSingle(CreateGameplayControllers);
+            container.RegisterAsSingle(CreateMetaHandler);
+        }
+
+        private static MetaHandler CreateMetaHandler(DIContainer container)
+        {
+            GameMode gameMode = container.Resolve<GameMode>();
+
+            Statistics statistics = container.Resolve<Statistics>();
+
+            ICoroutinesPerformer coroutinesPerformer = container.Resolve<ICoroutinesPerformer>();
+
+            PlayerDataProvider playerDataProvider = container.Resolve<PlayerDataProvider>();
+
+            StatisticsDataProvider statisticsDataProvider = container.Resolve<StatisticsDataProvider>();
+
+            WalletService walletService = container.Resolve<WalletService>();
+
+            ConfigsProviderService configsProviderService = container.Resolve<ConfigsProviderService>();
+            SetConfigurations setConfigurations = configsProviderService.GetConfig<SetConfigurations>();
+
+            return new MetaHandler(gameMode, statistics, playerDataProvider, statisticsDataProvider, coroutinesPerformer, walletService, setConfigurations.GetConfig(_args.TypeGame));
         }
 
         private static GameplayControllers CreateGameplayControllers(DIContainer container)
@@ -29,39 +52,18 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         {
             GameRandomSymbol gameRandomSymbol = container.Resolve<GameRandomSymbol>();
 
-            ResourcesAssetsLoader resourcesAssetsLoader = container.Resolve<ResourcesAssetsLoader>();
-            LevelConfig levelConfig = GetLevelConfig(resourcesAssetsLoader);
+            ConfigsProviderService configsProviderService = container.Resolve<ConfigsProviderService>();
+            SetConfigurations setConfigurations = configsProviderService.GetConfig<SetConfigurations>();
 
-            return new Rules(gameRandomSymbol, levelConfig);
+            return new Rules(gameRandomSymbol, setConfigurations.GetConfig(_args.TypeGame));
         }
 
         private static GameRandomSymbol CreateGameRandomSymbol(DIContainer container)
         {
-            ResourcesAssetsLoader resourcesAssetsLoader = container.Resolve<ResourcesAssetsLoader>();
-            LevelConfig levelConfig = GetLevelConfig(resourcesAssetsLoader);
+            ConfigsProviderService configsProviderService = container.Resolve<ConfigsProviderService>();
+            SetConfigurations setConfigurations = configsProviderService.GetConfig<SetConfigurations>();
 
-            return new GameRandomSymbol(container, levelConfig);
-        }
-
-        private static LevelConfig GetLevelConfig(ResourcesAssetsLoader resourcesAssetsLoader)
-        {
-            LevelConfig levelConfig;
-
-            switch (_args.TypeGame)
-            {
-                case TypeGame.Numbers:
-                    levelConfig = resourcesAssetsLoader.Load<LevelConfig>("Configs/LevelConfigNumbers");
-                    break;
-
-                case TypeGame.Characters:
-                    levelConfig = resourcesAssetsLoader.Load<LevelConfig>("Configs/LevelConfigSymbols");
-                    break;
-
-                default:
-                    throw new ArgumentException("Не определены настройки для ", nameof(_args.TypeGame));
-            }
-
-            return levelConfig;
+            return new GameRandomSymbol(container, setConfigurations.GetConfig(_args.TypeGame));
         }
 
         private static GameplayCycle CreatGameplayCycle(DIContainer container)
@@ -79,8 +81,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             Rules rules = container.Resolve<Rules>();
 
             return new GameMode(rules, gameRandomSymbol);
-        }    
+        }
 
-        
+
     }
 }

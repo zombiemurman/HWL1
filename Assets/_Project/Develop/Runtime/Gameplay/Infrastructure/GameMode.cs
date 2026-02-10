@@ -1,4 +1,5 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.Game;
+using Assets._Project.Develop.Runtime.Meta;
 using System;
 
 
@@ -10,8 +11,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         public event Action Defeat;
 
         private GameRandomSymbol _randomSymbol;
+        
         private Rules _rules;
-
         private bool _isRunning;
 
         public GameMode(Rules rules, GameRandomSymbol randomSymbol)
@@ -39,12 +40,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             if (DefeatConditionCompleted())
             {
                 ProcessDefeat();
+
                 return;
             }
 
             if (WinConditionCompleted())
             {
                 ProcessWin();
+
                 return;
             }
         }
@@ -68,6 +71,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         private void ProcessDefeat()
         {
             ProcessEndGame();
+
             Defeat?.Invoke();
         }
 

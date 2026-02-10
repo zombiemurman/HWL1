@@ -1,5 +1,9 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.Config;
+using Assets._Project.Develop.Runtime.Utilities.DataManagment;
+using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
+using Assets._Project.Develop.Runtime.Meta;
 using System;
+using System.Data;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Game
 {
@@ -37,10 +41,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Game
         public void Update()
         {
             if(_levelConfig.EquallyWin <= _countTrue)
+            {
                 Win = true;
+            }
 
             if (_levelConfig.NoEquallyDefeat <= _countFalse)
+            {
                 Defeat = true;
+            }
         }
 
         private void OnSymbolFalse()
@@ -58,5 +66,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Game
             _randomSymbol.SymbolTrue -= OnSymboltrue;
             _randomSymbol.SymbolFalse -= OnSymbolFalse;
         }
+
     }
 }

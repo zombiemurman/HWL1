@@ -22,6 +22,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
         private Rules _rules;
 
+        private MetaHandler _metaHandler;
+
         private ICoroutinesPerformer _coroutinesPerformer;
 
         public override void ProcessRegistrations(DIContainer container, IInputSceneArgs sceneArgs = null)
@@ -48,6 +50,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
             _gameplayControllers = _container.Resolve<GameplayControllers>();
 
+            _metaHandler = _container.Resolve<MetaHandler>();
+            _metaHandler.Initialize();
+
             yield break;
         }
 
@@ -69,7 +74,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
         private void OnDestroy()
         {
+            _metaHandler.Dispose();
+
             _randomSymbol.Stop();
+
             _rules?.Dispose();
         }
     }

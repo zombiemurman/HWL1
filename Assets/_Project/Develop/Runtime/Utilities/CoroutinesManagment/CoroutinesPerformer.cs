@@ -16,6 +16,5 @@ namespace Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment
 
         public void StopPerform(IEnumerator coroutineFunction)
             => StopCoroutine(coroutineFunction);
-
     }
 }
