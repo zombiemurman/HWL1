@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd8a3ff23cc3ec34f8f490ed72a2946b, type: 3}
   m_Name: PriceConfig
   m_EditorClassIdentifier: 
-  PriceToReset: 0
+  PriceToReset:
+    <Type>k__BackingField: 0
+    <Value>k__BackingField: 50

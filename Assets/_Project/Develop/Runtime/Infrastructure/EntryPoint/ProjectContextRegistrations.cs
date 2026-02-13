@@ -1,5 +1,5 @@
 ﻿using Assets._Project.Develop.Runtime.Infrastructure.DI;
-using Assets._Project.Develop.Runtime.Meta;
+using Assets._Project.Develop.Runtime.Meta.features.Statistic;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.Utilities.AssetsManagment;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet;

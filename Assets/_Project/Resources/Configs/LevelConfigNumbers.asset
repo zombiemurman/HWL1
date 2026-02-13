@@ -21,3 +21,9 @@ MonoBehaviour:
   - 5
   <EquallyWin>k__BackingField: 3
   <NoEquallyDefeat>k__BackingField: 3
+  _valuesWin:
+  - <Type>k__BackingField: 0
+    <Value>k__BackingField: 10
+  _valuesDefeat:
+  - <Type>k__BackingField: 0
+    <Value>k__BackingField: 5

@@ -1,6 +1,6 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.Config;
 using Assets._Project.Develop.Runtime.Gameplay.Infrastructure;
-using Assets._Project.Develop.Runtime.Meta;
+using Assets._Project.Develop.Runtime.Meta.features.Statistic;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;

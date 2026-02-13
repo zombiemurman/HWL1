@@ -1,7 +1,7 @@
 ﻿using Assets._Project.Develop.Runtime.Utilities.DataManagment.Data;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
 
-namespace Assets._Project.Develop.Runtime.Meta
+namespace Assets._Project.Develop.Runtime.Meta.features.Statistic
 {
     public class Statistics : IDataReader<StatisticsData>, IDataWriter<StatisticsData>
     {
