@@ -1,6 +1,8 @@
 ﻿using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.features.Statistic;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
+using Assets._Project.Develop.Runtime.UI;
+using Assets._Project.Develop.Runtime.UI.Core;
 using Assets._Project.Develop.Runtime.Utilities.AssetsManagment;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
@@ -44,7 +46,17 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
             container.RegisterAsSingle(CreateStatistics).NonLazy();
 
             container.RegisterAsSingle(CreateWalletService).NonLazy();
+
+            container.RegisterAsSingle(CreateProjectPresentersFactory);
+
+            container.RegisterAsSingle(CreateViewsFactory);
         }
+
+        private static ViewsFactory CreateViewsFactory(DIContainer container)
+           => new ViewsFactory(container.Resolve<ResourcesAssetsLoader>());
+
+        private static ProjectPresentersFactory CreateProjectPresentersFactory(DIContainer container)
+            => new ProjectPresentersFactory(container);
 
         private static WalletService CreateWalletService(DIContainer container)
         {
@@ -55,8 +67,8 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
 
             return new WalletService(currencies, container.Resolve<PlayerDataProvider>());
         }
-        private static Statistics CreateStatistics(DIContainer container)
-            => new Statistics(container.Resolve<StatisticsDataProvider>());
+        private static StatisticsModel CreateStatistics(DIContainer container)
+            => new StatisticsModel(container.Resolve<StatisticsDataProvider>());
 
         private static PlayerDataProvider CreatePlayerDataProvider(DIContainer container)
             => new PlayerDataProvider(container.Resolve<ISaveLoadService>(), container.Resolve<ConfigsProviderService>());

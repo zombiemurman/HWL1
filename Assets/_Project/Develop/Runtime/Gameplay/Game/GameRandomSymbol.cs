@@ -1,5 +1,4 @@
-﻿
-using Assets._Project.Develop.Runtime.Gameplay.Config;
+﻿using Assets._Project.Develop.Runtime.Gameplay.Config;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
 using System;
@@ -13,6 +12,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Game
     {
         public event Action SymbolTrue;
         public event Action SymbolFalse;
+
+        public event Action<string> SymbolAI;
+        public event Action<string> SymbolPlayer;
 
         private ICoroutinesPerformer _coroutinesPerformer;
 
@@ -65,20 +67,21 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Game
                 index = rnd.Next(symbols.Length);
                 symbol = symbols[index].ToUpper();
 
-                Debug.Log($"Введи символ - {symbol}");
+                SymbolAI?.Invoke(symbol);
+                SymbolPlayer?.Invoke("");
 
                 yield return new WaitWhile(() => Input.anyKey == false);
 
                 string pressedKey = Input.inputString.ToUpper();
 
+                SymbolPlayer?.Invoke(pressedKey);
+
                 if (symbol == pressedKey)
                 {
-                    Debug.Log($"{symbol} = {pressedKey}");
                     SymbolTrue?.Invoke();
                 }
                 else
                 {
-                    Debug.Log($"{symbol} <> {pressedKey}");
                     SymbolFalse?.Invoke();
                 }
 

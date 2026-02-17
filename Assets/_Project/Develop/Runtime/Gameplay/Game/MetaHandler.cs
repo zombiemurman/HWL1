@@ -12,7 +12,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Game
     {
         private GameMode _gameMode;
 
-        private Statistics _statistics;
+        private StatisticsModel _statistics;
 
         private PlayerDataProvider _playerDataProvider;
 
@@ -26,7 +26,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Game
 
         public MetaHandler(
             GameMode gameMode, 
-            Statistics statistics, 
+            StatisticsModel statistics, 
             PlayerDataProvider playerDataProvider,
             StatisticsDataProvider statisticsDataProvider,
             ICoroutinesPerformer coroutinesPerformer,

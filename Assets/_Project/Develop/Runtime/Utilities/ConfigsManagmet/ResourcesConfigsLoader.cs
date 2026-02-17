@@ -18,6 +18,7 @@ namespace Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet
             {typeof(StartWalletConfig), "Configs/Meta/Wallet/StartWalletConfig" },
             {typeof(PriceConfig), "Configs/Meta/PriceConfig" },
             {typeof(SetConfigurations), "Configs/GamePlay/SetConfigurations" },
+            {typeof(CurrencyIconsConfig), "Configs/Meta/Wallet/CurrencyIconsConfig" },
         };
 
         public ResourcesConfigsLoader(ResourcesAssetsLoader resources)

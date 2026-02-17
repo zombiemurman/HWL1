@@ -50,16 +50,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         {
             OnGameModeEnded();
 
-            Debug.Log("Defeat");
-
             _coroutinesPerformer.StartPerform(Launch());
         }
 
         private void OnGameModeWin()
         {
             OnGameModeEnded();
-
-            Debug.Log("Win");
 
             _coroutinesPerformer.StartPerform(Launch());
         }

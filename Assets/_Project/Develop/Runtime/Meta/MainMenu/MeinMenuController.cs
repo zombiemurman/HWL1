@@ -38,7 +38,7 @@ namespace Assets._Project.Develop.Runtime.Meta.MainMenu
 
             if (Input.GetKeyDown(KeyCode.I))
             {
-                Statistics statistics = _container.Resolve<Statistics>();
+                StatisticsModel statistics = _container.Resolve<StatisticsModel>();
                 WalletService walletService = _container.Resolve<WalletService>();
 
 

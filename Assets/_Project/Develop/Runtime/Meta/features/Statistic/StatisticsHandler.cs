@@ -2,6 +2,7 @@
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace Assets._Project.Develop.Runtime.Meta.features.Statistic
 {
     public class StatisticsHandler
     {
+        public event Action EnoughtNo;
+
         private PlayerDataProvider _playerDataProvider;
 
         private StatisticsDataProvider _statisticsDataProvider;
@@ -37,13 +40,14 @@ namespace Assets._Project.Develop.Runtime.Meta.features.Statistic
         {
             Dictionary<CurrencyTypes, int> priceToReset = _priceConfig.GetPriceToReset();
 
+            bool onReset = false;
             foreach (KeyValuePair<CurrencyTypes, int> price in priceToReset)
             {
                 if (_walletService.Enought(price.Key, price.Value))
                 {
                     _walletService.Spend(price.Key, price.Value);
 
-                    _statisticsDataProvider.Reset();
+                    onReset = true;
 
                     _coroutinesPerformer.StartPerform(_playerDataProvider.Save());
                     _coroutinesPerformer.StartPerform(_statisticsDataProvider.Save());
@@ -52,9 +56,18 @@ namespace Assets._Project.Develop.Runtime.Meta.features.Statistic
                 }
                 else
                 {
+                    onReset = false;
+                    
                     Debug.Log($"Не хвататает {price.Key} для сброса прогресса игры");
+                    
+                    break;
                 }
             }
+
+            if (onReset)
+                _statisticsDataProvider.Reset();
+            else
+                EnoughtNo?.Invoke();
         }
     }
 }
