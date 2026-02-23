@@ -19,6 +19,8 @@ namespace Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet
             {typeof(PriceConfig), "Configs/Meta/PriceConfig" },
             {typeof(SetConfigurations), "Configs/GamePlay/SetConfigurations" },
             {typeof(CurrencyIconsConfig), "Configs/Meta/Wallet/CurrencyIconsConfig" },
+            {typeof(RigidbodyMovementConfig), "Configs/GamePlay/RigidbodyMovementConfig" },
+            {typeof(CharacterControllerMovementConfig), "Configs/GamePlay/CharacterControllerMovementConfig" },
         };
 
         public ResourcesConfigsLoader(ResourcesAssetsLoader resources)

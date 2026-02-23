@@ -1,4 +1,7 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.Config;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Game;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.features.Statistic;
@@ -31,8 +34,32 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             container.RegisterAsSingle(CreateMetaHandler);
             container.RegisterAsSingle(CreateGameplayUIRoot).NonLazy();
             container.RegisterAsSingle(CreateGameplayPresentersFactory);
-            container.RegisterAsSingle(CreateGameplayScreenPresenter).NonLazy();
+            //container.RegisterAsSingle(CreateGameplayScreenPresenter).NonLazy();
             container.RegisterAsSingle(CreateGameplayPopupService);
+            container.RegisterAsSingle(CreateEntitiesFactory);
+            container.RegisterAsSingle(CreateEntitiesLifeContext);
+            container.RegisterAsSingle(CreateTestGameplay);
+            container.RegisterAsSingle(CreateMomoEntitiesFactory).NonLazy();
+        }
+
+        private static TestGameplay CreateTestGameplay(DIContainer container)
+            => new TestGameplay(container.Resolve<EntitiesFactory>());
+
+        private static MonoEntitiesFactory CreateMomoEntitiesFactory(DIContainer container)
+        {
+            return new MonoEntitiesFactory(
+                container.Resolve<ResourcesAssetsLoader>(),
+                container.Resolve<EntitiesLifeContext>());
+        }
+
+        private static EntitiesLifeContext CreateEntitiesLifeContext(DIContainer container)
+        {
+            return new EntitiesLifeContext();
+        }
+
+        private static EntitiesFactory CreateEntitiesFactory(DIContainer container)
+        {
+            return new EntitiesFactory(container);
         }
 
         private static GameplayPopupService CreateGameplayPopupService(DIContainer container)

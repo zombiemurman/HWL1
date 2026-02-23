@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.Game;
+﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
+using Assets._Project.Develop.Runtime.Gameplay.Game;
 using Assets._Project.Develop.Runtime.Infrastructure;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
@@ -14,15 +15,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         private DIContainer _container;
         private GameplayInputArgs _inputArgs;
 
-        private GameplayCycle _gameplayCycle;
+        private TestGameplay _testGameplay;
 
-        private GameRandomSymbol _randomSymbol;
-
-        private GameplayControllers _gameplayControllers;
-
-        private Rules _rules;
-
-        private MetaHandler _metaHandler;
+        private EntitiesLifeContext _entitiesLifeContext;
 
         private ICoroutinesPerformer _coroutinesPerformer;
 
@@ -42,43 +37,28 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         {
             _coroutinesPerformer = _container.Resolve<ICoroutinesPerformer>();
 
-            _gameplayCycle = _container.Resolve<GameplayCycle>();
+            _testGameplay = _container.Resolve<TestGameplay>();
 
-            _randomSymbol = _container.Resolve<GameRandomSymbol>();
-
-            _rules = _container.Resolve<Rules>();
-
-            _gameplayControllers = _container.Resolve<GameplayControllers>();
-
-            _metaHandler = _container.Resolve<MetaHandler>();
-            _metaHandler.Initialize();
+            _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
 
             yield break;
         }
 
         public override void Run()
         {
-            _coroutinesPerformer.StartPerform(_gameplayCycle.Launch());
+            _testGameplay.Run();
         }
 
         private void Update()
         {
-            _rules?.Update();
+            _entitiesLifeContext?.Update(Time.deltaTime);
 
-            _gameplayCycle?.Update(Time.deltaTime);
-
-            _randomSymbol?.Upadate();
-
-            _gameplayControllers?.Update();
+            _testGameplay?.Update();
         }
 
         private void OnDestroy()
         {
-            _metaHandler.Dispose();
-
-            _randomSymbol.Stop();
-
-            _rules?.Dispose();
+            _entitiesLifeContext.Dispose();
         }
     }
 }
