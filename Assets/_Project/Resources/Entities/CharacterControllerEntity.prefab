@@ -211,7 +211,7 @@ GameObject:
   - component: {fileID: 6679041654120662494}
   - component: {fileID: 36474726985340239}
   - component: {fileID: 5599873858232921403}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CharacterControllerEntity
   m_TagString: Untagged
   m_Icon: {fileID: 0}

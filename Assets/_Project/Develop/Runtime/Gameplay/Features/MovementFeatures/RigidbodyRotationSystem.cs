@@ -2,6 +2,7 @@
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using UnityEngine;
+using static UnityEngine.GridBrushBase;
 
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures
@@ -22,6 +23,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures
 
         public void OnUpdate(float deltaTime)
         {
+            if (_moveDirection.Value == Vector3.zero)
+                return;
+
             Quaternion targetRotation = Quaternion.LookRotation(_rigidbody.velocity);
             _rigidbody.MoveRotation(Quaternion.Slerp(_rigidbody.rotation, targetRotation, _rotationSpeed.Value * deltaTime));
         }

@@ -23,16 +23,16 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         public void Run()
         {
             _isRunning = true;
+
+            _entitiesFactory.CreateRigidbodyEntity(Vector3.zero + Vector3.forward * 5);
+
+            _entity = _entitiesFactory.CreateRigidbodyEntity(Vector3.zero);
         }
 
         public void Update()
         {
             if (_isRunning == false) 
                 return;
-
-            CreateCharacterControllerEntity();
-
-            CreateRigidbodyEntity();
 
             EntityController();
         }
@@ -43,37 +43,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay
                 _entitiesFactory.Release(_entity);
         }
 
-        private void CreateCharacterControllerEntity()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                ReleasedEntity();
-
-                _entity = _entitiesFactory.CreateCharacterControllerEntity(Vector3.zero);
-            }
-        }
-
-        private void CreateRigidbodyEntity()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                ReleasedEntity();
-
-                _entity = _entitiesFactory.CreateRigidbodyEntity(Vector3.zero);
-            }
-        }
-
         private void EntityController()
         {
             if (_entity == null)
                 return;
 
-            Vector3 input = new Vector3(
-                Input.GetAxisRaw("Horizontal"),
-                0,
-                Input.GetAxisRaw("Vertical"));
-
-            _entity.MoveDirection.Value = input;
+            if(Input.GetKeyDown(KeyCode.Space))
+                _entity.StartTeleportRequest.Invoke();
         }
 
     }

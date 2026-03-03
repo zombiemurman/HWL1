@@ -40,6 +40,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             container.RegisterAsSingle(CreateEntitiesLifeContext);
             container.RegisterAsSingle(CreateTestGameplay);
             container.RegisterAsSingle(CreateMomoEntitiesFactory).NonLazy();
+            container.RegisterAsSingle(CreateCollidersRegistryService);
+        }
+
+        private static CollidersRegistryService CreateCollidersRegistryService(DIContainer container)
+        {
+            return new CollidersRegistryService();
         }
 
         private static TestGameplay CreateTestGameplay(DIContainer container)
@@ -49,7 +55,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         {
             return new MonoEntitiesFactory(
                 container.Resolve<ResourcesAssetsLoader>(),
-                container.Resolve<EntitiesLifeContext>());
+                container.Resolve<EntitiesLifeContext>(),
+                container.Resolve<CollidersRegistryService>());
         }
 
         private static EntitiesLifeContext CreateEntitiesLifeContext(DIContainer container)
