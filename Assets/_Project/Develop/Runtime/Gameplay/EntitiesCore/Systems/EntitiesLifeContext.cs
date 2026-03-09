@@ -13,6 +13,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems
 
         private readonly List<Entity> _releaseRequests = new();
 
+        public IReadOnlyList<Entity> Entities => _entities;
+
         public void Add(Entity entity)
         {
             _entities.Add(entity);

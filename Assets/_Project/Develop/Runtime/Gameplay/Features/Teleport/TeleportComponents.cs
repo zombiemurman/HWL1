@@ -40,4 +40,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Teleport
     {
         public ReactiveVariable<float> Value;
     }
+
+    public class TeleportManaConsumptionEvent : IEntityComponent
+    {
+        public ReactiveEvent Value;
+    }
 }

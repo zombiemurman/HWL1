@@ -11,24 +11,29 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Teleport
         private ReactiveVariable<float> _energyTeleportValue;
 
         private ReactiveEvent _startTeleportEvent;
+        private ReactiveEvent _teleportManaConsumptionEvent;
 
         IDisposable _startTeleportEventDispouse;
+        IDisposable _startTeleportManaConsumptionEvent;
 
         public void OnInit(Entity entity)
         {
             _currentEnergy = entity.CurrentEnergy;
             _energyTeleportValue = entity.EnergyTeleportValue;
             _startTeleportEvent = entity.StartTeleportEvent;
+            _teleportManaConsumptionEvent = entity.TeleportManaConsumptionEvent;
 
-            _startTeleportEventDispouse = _startTeleportEvent.Subscribe(OnStartTeleport);
+            _startTeleportEventDispouse = _startTeleportEvent.Subscribe(OnEnegyConsumption);
+            _startTeleportManaConsumptionEvent = _teleportManaConsumptionEvent.Subscribe(OnEnegyConsumption);
         }
 
         public void Dispose()
         {
             _startTeleportEventDispouse.Dispose();
+            _startTeleportManaConsumptionEvent.Dispose();
         }
 
-        private void OnStartTeleport()
+        private void OnEnegyConsumption()
         {
             _currentEnergy.Value -= _energyTeleportValue.Value;
         }

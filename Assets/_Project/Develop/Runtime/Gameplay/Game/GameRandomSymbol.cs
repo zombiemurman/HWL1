@@ -35,7 +35,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Game
 
         public void Stop()
         {
-            _coroutinesPerformer.StopPerform(AsyncUpdate());
+            _coroutinesPerformer.StopPerform(_coroutine);
             
             _coroutine = null;
             

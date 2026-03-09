@@ -14,6 +14,7 @@ using Assets._Project.Develop.Runtime.Utilities.DataManagment.Serializers;
 using Assets._Project.Develop.Runtime.Utilities.LoadingScreen;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
+using Assets._Project.Develop.Runtime.Utilities.Timer;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,7 +51,12 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
             container.RegisterAsSingle(CreateProjectPresentersFactory);
 
             container.RegisterAsSingle(CreateViewsFactory);
+            
+            container.RegisterAsSingle(CreateTimerServiceFactory);
         }
+
+        private static TimerServiceFactory CreateTimerServiceFactory(DIContainer container)
+            => new TimerServiceFactory(container);
 
         private static ViewsFactory CreateViewsFactory(DIContainer container)
            => new ViewsFactory(container.Resolve<ResourcesAssetsLoader>());

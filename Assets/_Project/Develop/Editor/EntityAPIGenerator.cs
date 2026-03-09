@@ -49,6 +49,18 @@ namespace Assets._Project.Develop.Editor
                     sb.AppendLine($"\t\tpublic {GetValidTypeName(fieldInfo.FieldType)} {componentName} => {modyfiedComponentName}.{fieldInfo.Name};");
                     sb.AppendLine();
 
+                    //метод TryGet
+                    sb.AppendLine($"\t\tpublic bool TryGet{componentName}(out {GetValidTypeName(fieldInfo.FieldType)} {GetVariableNameFrom(fieldInfo.Name)})");
+                    sb.AppendLine("\t\t{");
+                    sb.AppendLine($"\t\t\tbool result = TryGetComponent(out {fullTypeName} component);");
+                    sb.AppendLine($"\t\t\tif(result)");
+                    sb.AppendLine($"\t\t\t\t{GetVariableNameFrom(fieldInfo.Name)} = component.{fieldInfo.Name};");
+                    sb.AppendLine($"\t\t\telse");
+                    sb.AppendLine($"\t\t\t\t{GetVariableNameFrom(fieldInfo.Name)} = default({GetValidTypeName(fieldInfo.FieldType)});");
+                    sb.AppendLine($"\t\t\treturn result;");
+                    sb.AppendLine("\t\t}");
+                    sb.AppendLine();
+
                     if (HasEmptyConstructor(fieldInfo.FieldType))
                     {
                         string initializer = "{" + fieldInfo.Name + " = new " + GetValidTypeName(fieldInfo.FieldType) + "() }";

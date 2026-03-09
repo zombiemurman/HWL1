@@ -2,6 +2,9 @@
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
+using Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Game;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.features.Statistic;
@@ -26,21 +29,47 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         {
             _args = args;
 
+            container.RegisterAsSingle(CreateGameplayUIRoot).NonLazy();
+            container.RegisterAsSingle(CreateMomoEntitiesFactory).NonLazy();
+            //container.RegisterAsSingle(CreateGameplayScreenPresenter).NonLazy();
+
+            //container.RegisterAsSingle<IInputService>(CreateDesktopInput);
+
             container.RegisterAsSingle(CreateGameMode);
             container.RegisterAsSingle(CreatGameplayCycle);
             container.RegisterAsSingle(CreateGameRandomSymbol);
             container.RegisterAsSingle(CreateRules);
             container.RegisterAsSingle(CreateGameplayControllers);
-            container.RegisterAsSingle(CreateMetaHandler);
-            container.RegisterAsSingle(CreateGameplayUIRoot).NonLazy();
-            container.RegisterAsSingle(CreateGameplayPresentersFactory);
-            //container.RegisterAsSingle(CreateGameplayScreenPresenter).NonLazy();
+            container.RegisterAsSingle(CreateMetaHandler);           
+            container.RegisterAsSingle(CreateGameplayPresentersFactory);           
             container.RegisterAsSingle(CreateGameplayPopupService);
             container.RegisterAsSingle(CreateEntitiesFactory);
             container.RegisterAsSingle(CreateEntitiesLifeContext);
             container.RegisterAsSingle(CreateTestGameplay);
-            container.RegisterAsSingle(CreateMomoEntitiesFactory).NonLazy();
             container.RegisterAsSingle(CreateCollidersRegistryService);
+            container.RegisterAsSingle(CreateBrainsFacttory);
+            container.RegisterAsSingle(CreateAIBrainsContext);
+            container.RegisterAsSingle(CreateInputFactory);
+        }
+
+        private static InputFactory CreateInputFactory(DIContainer container)
+        {
+            return new InputFactory();
+        }
+
+        //private static DesktopInput CreateDesktopInput(DIContainer container)
+        //{
+        //    return new DesktopInput();
+        //}
+
+        private static AIBrainsContext CreateAIBrainsContext(DIContainer container)
+        {
+            return new AIBrainsContext();
+        }
+
+        private static BrainsFactory CreateBrainsFacttory(DIContainer container)
+        {
+            return new BrainsFactory(container);
         }
 
         private static CollidersRegistryService CreateCollidersRegistryService(DIContainer container)
@@ -49,7 +78,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         }
 
         private static TestGameplay CreateTestGameplay(DIContainer container)
-            => new TestGameplay(container.Resolve<EntitiesFactory>());
+            => new TestGameplay(
+                container.Resolve<EntitiesFactory>(),
+                container.Resolve<BrainsFactory>());
 
         private static MonoEntitiesFactory CreateMomoEntitiesFactory(DIContainer container)
         {

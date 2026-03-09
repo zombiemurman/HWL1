@@ -1,5 +1,5 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
-using Assets._Project.Develop.Runtime.Gameplay.Game;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Infrastructure;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
@@ -18,6 +18,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         private TestGameplay _testGameplay;
 
         private EntitiesLifeContext _entitiesLifeContext;
+
+        private AIBrainsContext _brainsContext;
 
         private ICoroutinesPerformer _coroutinesPerformer;
 
@@ -41,6 +43,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
             _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
 
+            _brainsContext = _container.Resolve<AIBrainsContext>();
+
             yield break;
         }
 
@@ -51,6 +55,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
         private void Update()
         {
+            _brainsContext?.Update(Time.deltaTime);
+
             _entitiesLifeContext?.Update(Time.deltaTime);
 
             _testGameplay?.Update();

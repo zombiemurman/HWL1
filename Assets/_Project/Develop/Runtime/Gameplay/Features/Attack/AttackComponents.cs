@@ -1,5 +1,7 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
+using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
 {
@@ -21,5 +23,90 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
     public class TakeDamageRequest : IEntityComponent
     {
         public ReactiveEvent<float> Value;
+    }
+
+    public class AttackProcessInitialTime : IEntityComponent
+    {
+        public ReactiveVariable<float> Value;
+    }
+
+    public class AttackProcessCurrentTime : IEntityComponent
+    {
+        public ReactiveVariable<float> Value;
+    }
+
+    public class StartAttackRequest : IEntityComponent
+    {
+        public ReactiveEvent Value;
+    }
+
+    public class StartAttackEvent : IEntityComponent
+    {
+        public ReactiveEvent Value;
+    }
+
+    public class CanStartAttack : IEntityComponent
+    {
+        public ICompositCondition Value;
+    }
+
+    public class EndAttackEvent : IEntityComponent
+    {
+        public ReactiveEvent Value;
+    }
+
+    public class AttackDelayTime : IEntityComponent
+    {
+        public ReactiveVariable<float> Value;
+    }
+
+    public class AttackDelayEndEvent : IEntityComponent
+    {
+        public ReactiveEvent Value;
+    }
+
+    public class InstantAttackDamage : IEntityComponent
+    {
+        public ReactiveVariable<float> Value;
+    }
+
+    public class ShootPoint : IEntityComponent
+    {
+        public Transform Value;
+    }
+
+    public class MustCancelAttack : IEntityComponent
+    {
+        public ICompositCondition Value;
+    }
+
+    public class AttackCancelEvent : IEntityComponent
+    {
+        public ReactiveEvent Value;
+    }
+
+    public class AttackCooldownInitialTime : IEntityComponent
+    {
+        public ReactiveVariable<float> Value;
+    }
+
+    public class AttackCooldownCurentTime : IEntityComponent
+    {
+        public ReactiveVariable<float> Value;
+    }
+
+    public class InAttackCooldown : IEntityComponent
+    {
+        public ReactiveVariable<bool> Value;
+    }
+
+    public class BodyContacDamage : IEntityComponent
+    {
+        public ReactiveVariable<float> Value;
+    }
+
+    public class IsBullet : IEntityComponent
+    {
+        public ReactiveVariable<bool> Value;
     }
 }

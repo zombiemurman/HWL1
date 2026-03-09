@@ -1,10 +1,16 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures
 {
     public class MoveDirection : IEntityComponent
+    {
+        public ReactiveVariable<Vector3> Value;
+    }
+
+    public class RotationDirection : IEntityComponent
     {
         public ReactiveVariable<Vector3> Value;
     }
@@ -17,5 +23,20 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures
     public class RotationSpeed : IEntityComponent
     {
         public ReactiveVariable<float> Value;
+    }
+
+    public class IsMoving : IEntityComponent
+    {
+        public ReactiveVariable<bool> Value;
+    }
+
+    public class CanMove : IEntityComponent
+    {
+        public ICompositCondition Value;
+    }
+
+    public class CanRotate : IEntityComponent
+    {
+        public ICompositCondition Value;
     }
 }
