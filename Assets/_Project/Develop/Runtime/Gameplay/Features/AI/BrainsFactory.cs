@@ -26,6 +26,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
 
         private readonly EntitiesLifeContext _entitiesLifeContext;
 
+        private readonly EntitiesFactory _entitiesFactory;
+
         public BrainsFactory(DIContainer container)
         {
             _container = container;
@@ -37,6 +39,48 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
             _inputFactory = _container.Resolve<InputFactory>();
 
             _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
+
+            _entitiesFactory = _container.Resolve<EntitiesFactory>();
+        }
+
+        public AIStateMachine CreateBombExplosionStateMachine(Entity entity)
+        {
+            //List<IDisposable> disposables = new List<IDisposable>();
+
+            ExplosionState explosionState = new ExplosionState(entity);
+
+            //BombSate bombSate = new BombSate(_entitiesFactory);
+
+            //TimerService explosionTimer = _timerServiceFactory.Create(3f);
+            //disposables.Add(explosionTimer);
+            //disposables.Add(explosionState.Entered.Subscribe(explosionTimer.Restart));
+
+            //TimerService bombTimer = _timerServiceFactory.Create(3f);
+            //disposables.Add(bombTimer);
+            //disposables.Add(bombSate.Entered.Subscribe(bombTimer.Restart));
+
+            //FuncCondition explosionToBombCondition = new FuncCondition(() => explosionTimer.IsOver);
+            //FuncCondition bombToExplosionCondition = new FuncCondition(() => bombTimer.IsOver);
+
+            AIStateMachine stateMachine = new AIStateMachine();
+
+            stateMachine.AddState(explosionState);
+            //stateMachine.AddState(bombSate);
+
+            //stateMachine.AddTransition(explosionState, bombSate, explosionToBombCondition);
+            //stateMachine.AddTransition(bombSate, explosionState, bombToExplosionCondition);
+
+            return stateMachine;
+        }
+
+        public StateMachineBrain CreateBombExplosionBrain(Entity entity)
+        {
+            AIStateMachine stateMachine = CreateBombExplosionStateMachine(entity);
+            StateMachineBrain machineBrain = new StateMachineBrain(stateMachine);
+
+            _brainContext.SetFor(entity, machineBrain);
+
+            return machineBrain;
         }
 
         public StateMachineBrain CreateBehaviourEntity_TeleportRandom(Entity entity)

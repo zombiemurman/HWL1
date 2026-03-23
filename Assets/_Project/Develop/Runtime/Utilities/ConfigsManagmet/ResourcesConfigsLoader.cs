@@ -1,3 +1,4 @@
+using Assets._Project.Develop.Runtime.Configs.Gameplay.Levels;
 using Assets._Project.Develop.Runtime.Configs.Meta;
 using Assets._Project.Develop.Runtime.Configs.Meta.Wallet;
 using Assets._Project.Develop.Runtime.Gameplay.Config;
@@ -21,6 +22,7 @@ namespace Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet
             {typeof(CurrencyIconsConfig), "Configs/Meta/Wallet/CurrencyIconsConfig" },
             {typeof(RigidbodyMovementConfig), "Configs/GamePlay/RigidbodyMovementConfig" },
             {typeof(CharacterControllerMovementConfig), "Configs/GamePlay/CharacterControllerMovementConfig" },
+            {typeof(LevelsListConfig), "Configs/Gameplay/Levels/LevelsListConfig" }
         };
 
         public ResourcesConfigsLoader(ResourcesAssetsLoader resources)

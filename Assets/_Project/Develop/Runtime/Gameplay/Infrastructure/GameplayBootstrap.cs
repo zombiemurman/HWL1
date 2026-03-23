@@ -1,5 +1,7 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
+using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
+using Assets._Project.Develop.Runtime.Gameplay.States;
 using Assets._Project.Develop.Runtime.Infrastructure;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
@@ -15,13 +17,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         private DIContainer _container;
         private GameplayInputArgs _inputArgs;
 
-        private TestGameplay _testGameplay;
 
         private EntitiesLifeContext _entitiesLifeContext;
 
         private AIBrainsContext _brainsContext;
 
-        private ICoroutinesPerformer _coroutinesPerformer;
+        private GameplayStatesContext _gameplayStatesContext;
 
         public override void ProcessRegistrations(DIContainer container, IInputSceneArgs sceneArgs = null)
         {
@@ -37,20 +38,20 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
         public override IEnumerator Initialize()
         {
-            _coroutinesPerformer = _container.Resolve<ICoroutinesPerformer>();
-
-            _testGameplay = _container.Resolve<TestGameplay>();
-
             _entitiesLifeContext = _container.Resolve<EntitiesLifeContext>();
 
             _brainsContext = _container.Resolve<AIBrainsContext>();
+
+            _gameplayStatesContext = _container.Resolve<GameplayStatesContext>();
+
+            _container.Resolve<MainHeroFactory>().Create(Vector3.zero, _inputArgs.LevelNumber);
 
             yield break;
         }
 
         public override void Run()
         {
-            _testGameplay.Run();
+            _gameplayStatesContext.Run();
         }
 
         private void Update()
@@ -59,7 +60,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
             _entitiesLifeContext?.Update(Time.deltaTime);
 
-            _testGameplay?.Update();
+            _gameplayStatesContext?.Update(Time.deltaTime);
+
         }
 
         private void OnDestroy()

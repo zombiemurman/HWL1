@@ -1,8 +1,11 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
+using Assets._Project.Develop.Runtime.Gameplay.Features.Attack;
+using Assets._Project.Develop.Runtime.Gameplay.Features.ExpolosionFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
+using Assets._Project.Develop.Runtime.Utilities;
 using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay
@@ -29,9 +32,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay
         {
             _isRunning = true;
 
-            _entitiesFactory.CreateRigidbodyEntity(Vector3.zero + Vector3.forward * 6);
+            CreateEnemy();
 
-            _entity = _entitiesFactory.CreateRigidbodyEntity(Vector3.zero);
+            //_brainsFacttory.CreateBombExplosionBrain(_entitiesFactory.CreateHeroEntity());
+
         }
 
         public void Update()
@@ -39,33 +43,21 @@ namespace Assets._Project.Develop.Runtime.Gameplay
             if (_isRunning == false) 
                 return;
 
-            if(Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                _entity.CurrentEnergy.Value = 100;
 
-                _brainsFacttory.CreateBehaviourEntity_TeleportRandom(_entity);
-            }    
-                
+            if(Input.GetKeyDown(KeyCode.E))
+                CreateEnemy();
 
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                _entity.CurrentEnergy.Value = 100;
+        }
 
-                _brainsFacttory.CreateBehaviourEntity_CurrentTargetTeleport(_entity, new MinHealthTargetSelector(_entity));
-            }
-                
-
-            if(Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                if(_entity != null)
-                {
-                    _entity.Dispose();
-                    _entitiesFactory.Release(_entity);
-                }
-
-                _entity = _entitiesFactory.CreateHeroEntity(Vector3.zero);
-                _brainsFacttory.CreateMainHeroBrain(_entity);
-            }
+        private void CreateEnemy()
+        {
+            _entitiesFactory.CreateRigidbodyEntity(new Vector3(5, 0, 5));
+            _entitiesFactory.CreateRigidbodyEntity(new Vector3(4, 0, 5));
+            _entitiesFactory.CreateRigidbodyEntity(new Vector3(3, 0, 5));
+            _entitiesFactory.CreateRigidbodyEntity(new Vector3(2, 0, 5));
+            _entitiesFactory.CreateRigidbodyEntity(new Vector3(1, 0, 5));
+            _entitiesFactory.CreateRigidbodyEntity(new Vector3(0, 0, 5));
+            _entitiesFactory.CreateRigidbodyEntity(new Vector3(-1, 0, 5));
         }
     }
 }

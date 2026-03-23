@@ -10,8 +10,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Sensors
     {
         private ReactiveVariable<bool> _inAttackProcess;
 
-        private ReactiveVariable<float> _radius;
-
         private Buffer<Collider> _contacts;
 
         private CapsuleCollider _body;
@@ -23,11 +21,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Sensors
         public void OnInit(Entity entity)
         {
             _inAttackProcess = entity.inAttackProcess;
-            _radius = entity.RadiusAttack;
             _contacts = entity.ContactCollidersBuffer;
             _mask = entity.ContactsDetectingMask;
             _transform = entity.EntityTransform;
             _body = entity.BodyCollider;
+            
         }
 
         public void OnUpdate(float deltaTime)
@@ -39,9 +37,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Sensors
             Vector3 top = _transform.position - Vector3.up;
 
             _contacts.Count = Physics.OverlapCapsuleNonAlloc(
-                bottom,
-                top,
-                _radius.Value,
+                _body.bounds.min,
+                _body.bounds.max,
+                _body.radius,
                 _contacts.Items,
                 _mask,
                 QueryTriggerInteraction.Ignore);

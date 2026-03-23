@@ -1,4 +1,6 @@
 ﻿using Assets._Project.Develop.Runtime.UI.Core;
+using Assets._Project.Develop.Runtime.UI.MainMenu;
+using Assets._Project.Develop.Runtime.UI.Wallet;
 using System.Collections.Generic;
 
 namespace Assets._Project.Develop.Runtime.UI.Gameplay
@@ -6,19 +8,23 @@ namespace Assets._Project.Develop.Runtime.UI.Gameplay
     public class GameplayScreenPresenter : IPresenter
     {
         private GameplayScreenView _gameplayScreenView;
-        private GameplayPresentersFactory _gameplayPresentersFactory;
+        
+        private readonly ProjectPresentersFactory _projectPresentersFactory;
 
         private readonly List<IPresenter> _childPresenters = new();
 
-        public GameplayScreenPresenter(GameplayScreenView gameplayScreenView, GameplayPresentersFactory gameplayPresentersFactory)
+        public GameplayScreenPresenter(
+            GameplayScreenView gameplayScreenView, 
+            ProjectPresentersFactory projectPresentersFactory)
         {
             _gameplayScreenView = gameplayScreenView;
-            _gameplayPresentersFactory = gameplayPresentersFactory;
+            _projectPresentersFactory = projectPresentersFactory;
         }
 
         public void Initialize()
         {
-            CreateGameplay();
+
+            CreateWallet();
 
             foreach (IPresenter presenter in _childPresenters)
                 presenter.Initialize();
@@ -32,11 +38,12 @@ namespace Assets._Project.Develop.Runtime.UI.Gameplay
                 presenter.Dispose();
         }
 
-        private void CreateGameplay()
+        private void CreateWallet()
         {
-            GameplayPresenter gameplayPresenter = _gameplayPresentersFactory.CreateGameplayPresenter(_gameplayScreenView.Gameplay);
+            WalletPresenter walletPresenter = _projectPresentersFactory.CreateWalletPresenter(_gameplayScreenView.WalletView);
 
-            _childPresenters.Add(gameplayPresenter);
+            _childPresenters.Add(walletPresenter);
         }
+
     }
 }

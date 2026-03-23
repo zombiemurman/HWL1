@@ -1,5 +1,7 @@
 ﻿using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.features.Statistic;
+using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
+using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
 using System;
 
 namespace Assets._Project.Develop.Runtime.UI.MainMenu
@@ -19,7 +21,9 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
                 mainMenuScreenView,
                 _container.Resolve<ProjectPresentersFactory>(),
                 _container.Resolve<StatisticsHandler>(),
-                _container.Resolve<MainMenuPopupService>());
+                _container.Resolve<MainMenuPopupService>(),
+                _container.Resolve<SceneSwitcherService>(),
+                _container.Resolve<ICoroutinesPerformer>());
         }
     }
 }

@@ -30,8 +30,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Game
             PlayerDataProvider playerDataProvider,
             StatisticsDataProvider statisticsDataProvider,
             ICoroutinesPerformer coroutinesPerformer,
-            WalletService walletService,
-            LevelConfig levelConfig)
+            WalletService walletService)
         {
             _gameMode = gameMode;
             _statistics = statistics;
@@ -39,7 +38,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Game
             _statisticsDataProvider = statisticsDataProvider;
             _coroutinesPerformer = coroutinesPerformer;
             _walletService = walletService;
-            _levelConfig = levelConfig;
         }
 
         public void Initialize()
@@ -61,8 +59,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Game
             foreach (CurrencyTypes currencyTypes in Enum.GetValues(typeof(CurrencyTypes)))
                 _walletService.Spend(currencyTypes, _levelConfig.GetValueDefeatFor(currencyTypes));
 
-            _coroutinesPerformer.StartPerform(_playerDataProvider.Save());
-            _coroutinesPerformer.StartPerform(_statisticsDataProvider.Save());
+            _coroutinesPerformer.StartPerform(_playerDataProvider.SaveAsync());
+            _coroutinesPerformer.StartPerform(_statisticsDataProvider.SaveAsync());
         }
 
         private void OnGameModeWin()
@@ -72,8 +70,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Game
             foreach (CurrencyTypes currencyTypes in Enum.GetValues(typeof(CurrencyTypes)))
                 _walletService.Add(currencyTypes, _levelConfig.GetValueWinFor(currencyTypes));
 
-            _coroutinesPerformer.StartPerform(_playerDataProvider.Save());
-            _coroutinesPerformer.StartPerform(_statisticsDataProvider.Save());
+            _coroutinesPerformer.StartPerform(_playerDataProvider.SaveAsync());
+            _coroutinesPerformer.StartPerform(_statisticsDataProvider.SaveAsync());
         }
     }
 }

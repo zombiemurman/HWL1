@@ -5,7 +5,7 @@ using System;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
 {
-    public class AttackProcessTimerSystem : IInitializableSystem, IDisposableSystem, EntitiesCore.Systems.IUpdatableSystem
+    public class AttackProcessTimerSystem : IInitializableSystem, IDisposableSystem, IUpdatableSystem
     {
         private ReactiveVariable<float> _currentTime;
 

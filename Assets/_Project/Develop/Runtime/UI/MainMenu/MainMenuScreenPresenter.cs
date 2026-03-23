@@ -1,7 +1,10 @@
-﻿using Assets._Project.Develop.Runtime.Meta.features.Statistic;
+﻿using Assets._Project.Develop.Runtime.Gameplay.Infrastructure;
+using Assets._Project.Develop.Runtime.Meta.features.Statistic;
 using Assets._Project.Develop.Runtime.UI.Core;
 using Assets._Project.Develop.Runtime.UI.Statistics;
 using Assets._Project.Develop.Runtime.UI.Wallet;
+using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
+using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
 using System;
 using System.Collections.Generic;
 
@@ -19,21 +22,31 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
 
         private readonly List<IPresenter> _childPresenters = new();
 
+        private readonly SceneSwitcherService _sceneSwitcherService;
+
+        private readonly ICoroutinesPerformer _coroutinesPerformer;
+
         public MainMenuScreenPresenter(
             MainMenuScreenView mainMenuScreenView,
             ProjectPresentersFactory projectPresentersFactory,
             StatisticsHandler statisticsHandler,
-            MainMenuPopupService menuPopupService)
+            MainMenuPopupService menuPopupService,
+            SceneSwitcherService sceneSwitcherService,
+            ICoroutinesPerformer coroutinesPerformer)
         {
             _mainMenuScreenView = mainMenuScreenView;
             _projectPresentersFactory = projectPresentersFactory;
             _statisticsHandler = statisticsHandler;
             _menuPopupService = menuPopupService;
+            _sceneSwitcherService = sceneSwitcherService;
+            _coroutinesPerformer = coroutinesPerformer;
         }
 
         public void Initialize()
         {
             _mainMenuScreenView.ResetStatisticButtonClicked += OnResetStatisticButtonClicked;
+
+            _mainMenuScreenView.StartGameButtonClicked += OnStartGameButtonClicked;
 
             _statisticsHandler.EnoughtNo += OnEnoughtNo;
 
@@ -47,6 +60,8 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
         public void Dispose()
         {
             _mainMenuScreenView.ResetStatisticButtonClicked -= OnResetStatisticButtonClicked;
+
+            _mainMenuScreenView.StartGameButtonClicked -= OnStartGameButtonClicked;
 
             _statisticsHandler.EnoughtNo -= OnEnoughtNo;
 
@@ -73,6 +88,11 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
         private void OnResetStatisticButtonClicked()
         {
             _statisticsHandler.Reset();
+        }
+
+        private void OnStartGameButtonClicked()
+        {
+            _coroutinesPerformer.StartPerform(_sceneSwitcherService.ProcessSwitchTo(Scenes.Gameplay, new GameplayInputArgs(1)));
         }
 
         private void OnEnoughtNo()

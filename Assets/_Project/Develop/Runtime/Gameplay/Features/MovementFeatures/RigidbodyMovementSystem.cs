@@ -15,8 +15,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures
 
         private ReactiveVariable<bool> _isMoving;
 
-        private ReactiveVariable<bool> _isBullet;
-
         private ICompositCondition _canMove;
 
         private Rigidbody _rigidbody;
@@ -27,7 +25,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures
             _moveSpeed = entity.MoveSpeed;
             _rigidbody = entity.Rigidbody;
             _canMove = entity.CanMove;
-            _isBullet = entity.IsBullet;
 
             _isMoving = entity.IsMoving;
         }
@@ -46,8 +43,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures
 
             _rigidbody.velocity = velocity;
 
-            if (_isBullet.Value)
-                Debug.Log("Bullet velosity - " + velocity);
         }
     }
 }

@@ -49,8 +49,8 @@ namespace Assets._Project.Develop.Runtime.Meta.features.Statistic
 
                     onReset = true;
 
-                    _coroutinesPerformer.StartPerform(_playerDataProvider.Save());
-                    _coroutinesPerformer.StartPerform(_statisticsDataProvider.Save());
+                    _coroutinesPerformer.StartPerform(_playerDataProvider.SaveAsync());
+                    _coroutinesPerformer.StartPerform(_statisticsDataProvider.SaveAsync());
 
                     Debug.Log("Прогресс сброшен");
                 }

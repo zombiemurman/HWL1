@@ -1,11 +1,16 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.Config;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Levels;
+using Assets._Project.Develop.Runtime.Gameplay.Config;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
+using Assets._Project.Develop.Runtime.Gameplay.Features.Enemies;
 using Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
+using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Game;
+using Assets._Project.Develop.Runtime.Gameplay.States;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.features.Statistic;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
@@ -30,15 +35,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             _args = args;
 
             container.RegisterAsSingle(CreateGameplayUIRoot).NonLazy();
+            container.RegisterAsSingle(CreateGameplayScreenPresenter).NonLazy();
             container.RegisterAsSingle(CreateMomoEntitiesFactory).NonLazy();
-            //container.RegisterAsSingle(CreateGameplayScreenPresenter).NonLazy();
-
-            //container.RegisterAsSingle<IInputService>(CreateDesktopInput);
+            container.RegisterAsSingle(CreateMainHeroHolderService).NonLazy();
+            
+            container.RegisterAsSingle<IInputService>(CreateDesktopInput);
 
             container.RegisterAsSingle(CreateGameMode);
             container.RegisterAsSingle(CreatGameplayCycle);
-            container.RegisterAsSingle(CreateGameRandomSymbol);
-            container.RegisterAsSingle(CreateRules);
             container.RegisterAsSingle(CreateGameplayControllers);
             container.RegisterAsSingle(CreateMetaHandler);           
             container.RegisterAsSingle(CreateGameplayPresentersFactory);           
@@ -50,17 +54,60 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             container.RegisterAsSingle(CreateBrainsFacttory);
             container.RegisterAsSingle(CreateAIBrainsContext);
             container.RegisterAsSingle(CreateInputFactory);
+            container.RegisterAsSingle(CreateGameplayStatesFactory);
+            container.RegisterAsSingle(CreateGameplayStatesContext);
+            container.RegisterAsSingle(CreateStageProviderService);
+            container.RegisterAsSingle(CreateStageFactory);
+            container.RegisterAsSingle(CreateMainHeroFactory);
+            container.RegisterAsSingle(CreateEnemiesFactory);
+        }
+
+        private static EnemiesFactory CreateEnemiesFactory(DIContainer container)
+        {
+            return new EnemiesFactory(container);
+        }
+
+        private static MainHeroFactory CreateMainHeroFactory(DIContainer container)
+        {
+            return new MainHeroFactory(container);
+        }
+
+        private static DesktopInput CreateDesktopInput(DIContainer container)
+        {
+            return new DesktopInput();
+        }
+
+        private static StageFactory CreateStageFactory(DIContainer container)
+        {
+            return new StageFactory(container);
+        }
+        private static StageProviderService CreateStageProviderService(DIContainer container)
+        {
+            return new StageProviderService(
+                container.Resolve<ConfigsProviderService>().GetConfig<LevelsListConfig>().GetBy(_args.LevelNumber),
+                container.Resolve<StageFactory>());
+        }
+
+        private static GameplayStatesContext CreateGameplayStatesContext(DIContainer container)
+        {
+            return new GameplayStatesContext(
+                container.Resolve<GameplayStatesFactory>().CreateGameplayStateMachine(_args));
+        }
+
+        private static GameplayStatesFactory CreateGameplayStatesFactory(DIContainer container)
+        {
+            return new GameplayStatesFactory(container);
+        }
+
+        private static MainHeroHolderService CreateMainHeroHolderService(DIContainer container)
+        {
+            return new MainHeroHolderService(container.Resolve<EntitiesLifeContext>());
         }
 
         private static InputFactory CreateInputFactory(DIContainer container)
         {
             return new InputFactory();
         }
-
-        //private static DesktopInput CreateDesktopInput(DIContainer container)
-        //{
-        //    return new DesktopInput();
-        //}
 
         private static AIBrainsContext CreateAIBrainsContext(DIContainer container)
         {
@@ -152,31 +199,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             WalletService walletService = container.Resolve<WalletService>();
 
             ConfigsProviderService configsProviderService = container.Resolve<ConfigsProviderService>();
-            SetConfigurations setConfigurations = configsProviderService.GetConfig<SetConfigurations>();
 
-            return new MetaHandler(gameMode, statistics, playerDataProvider, statisticsDataProvider, coroutinesPerformer, walletService, setConfigurations.GetConfig(_args.TypeGame));
+            return new MetaHandler(gameMode, statistics, playerDataProvider, statisticsDataProvider, coroutinesPerformer, walletService);
         }
 
         private static GameplayControllers CreateGameplayControllers(DIContainer container)
             => new GameplayControllers(container);
 
-        private static Rules CreateRules(DIContainer container)
-        {
-            GameRandomSymbol gameRandomSymbol = container.Resolve<GameRandomSymbol>();
-
-            ConfigsProviderService configsProviderService = container.Resolve<ConfigsProviderService>();
-            SetConfigurations setConfigurations = configsProviderService.GetConfig<SetConfigurations>();
-
-            return new Rules(gameRandomSymbol, setConfigurations.GetConfig(_args.TypeGame));
-        }
-
-        private static GameRandomSymbol CreateGameRandomSymbol(DIContainer container)
-        {
-            ConfigsProviderService configsProviderService = container.Resolve<ConfigsProviderService>();
-            SetConfigurations setConfigurations = configsProviderService.GetConfig<SetConfigurations>();
-
-            return new GameRandomSymbol(container, setConfigurations.GetConfig(_args.TypeGame));
-        }
 
         private static GameplayCycle CreatGameplayCycle(DIContainer container)
         {

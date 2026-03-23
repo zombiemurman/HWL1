@@ -13,6 +13,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
         private ReactiveEvent _startAttackEvent;
 
         private ReactiveVariable<bool> _inAttackProcess;
+        private ReactiveVariable<Vector3> _explosionPoint;
 
         private ICompositCondition _canStartAttack;
 
@@ -24,6 +25,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
             _startAttackEvent = entity.StartAttackEvent;
 
             _inAttackProcess = entity.inAttackProcess;
+            _explosionPoint = entity.ExplosionPoint;
 
             _canStartAttack = entity.CanStartAttack;
 
@@ -47,6 +49,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
             }
             else
             {
+                _explosionPoint.Value = Vector3.zero;
                 Debug.Log("Cant attack");
             }
         }

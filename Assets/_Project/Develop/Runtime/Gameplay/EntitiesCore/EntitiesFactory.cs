@@ -1,15 +1,19 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.Config;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Entities;
+using Assets._Project.Develop.Runtime.Gameplay.Config;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Attack;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Attack.AttackAOETeleport;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Attack.Shoot;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Attack.TakeDamage;
+using Assets._Project.Develop.Runtime.Gameplay.Features.BombFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.ContactTakeDamage;
+using Assets._Project.Develop.Runtime.Gameplay.Features.ExpolosionFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.lifecycle;
 using Assets._Project.Develop.Runtime.Gameplay.Features.LifeCycle;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Sensors;
+using Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Teleport;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities;
@@ -18,6 +22,7 @@ using Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 {
@@ -50,44 +55,34 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 
             RigidbodyMovementConfig config = _configsProviderService.GetConfig<RigidbodyMovementConfig>();
 
+            Vector3 direction = (Vector3.zero - position).normalized;
+
             entity
-                .AddMoveDirection()
-                .AddIsBullet()
+                .AddTeam(new ReactiveVariable<Teams>(Teams.Enemies))
+                .AddIsTouchAnotherTeam()
+                .AddIsTouchDeatMask()
+                .AddBodyContacDamage(new ReactiveVariable<float>(20))
+                .AddinAttackProcess(new ReactiveVariable<bool>(true))
+                .AddMoveDirection(new ReactiveVariable<Vector3>(direction))
                 .AddIsMoving()
                 .AddRotationDirection()
-                .AddMoveSpeed(new ReactiveVariable<float>(config.MoveSpeed))
-                .AddRotationSpeed(new ReactiveVariable<float>(config.RotationSpeed))
+                .AddMoveSpeed(new ReactiveVariable<float>(1))
+                .AddRotationSpeed(new ReactiveVariable<float>(700))
                 .AddMaxHealth(new ReactiveVariable<float>(100))
                 .AddCurrentHealth(new ReactiveVariable<float>(100))
-                .AddMaxEnergy(new ReactiveVariable<float>(100))
-                .AddCurrentEnergy(new ReactiveVariable<float>(100))
                 .AddIsDead()
-                .AddEnergyRecoveryInitialTime(new ReactiveVariable<float>(5))
-                .AddEnergyRecoveryCurrentTime()
-                .AddEnergyRecoveryValue(new ReactiveVariable<float>(10))
-                .AddEnergyTeleportValue(new ReactiveVariable<float>(30))
-                .AddStartTeleportEvent()
-                .AddStartTeleportRequest()
-                .AddEndTeleportEvent()
-                .AddRadiusTeleport(new ReactiveVariable<float>(5))
-                .AddRadiusAttack(new ReactiveVariable<float>(15))
-                .AddDamageAttack(new ReactiveVariable<float>(60))
-                .AddinAttackProcess()
-                .AddContactsDetectingMask(1 << LayerMask.NameToLayer("Characters"))
-                .AddContactCollidersBuffer(new Buffer<Collider>(64))
-                .AddContactEntitiesBuffer(new Buffer<Entity>(64))
                 .AddTakeDamageRequest()
-                .AddTeleportManaConsumptionEvent()
-                .AddCurrentTarget();
+                .AddDeathMask(Layers.CharactersMask)
+                .AddContactsDetectingMask(Layers.CharactersMask)
+                .AddContactCollidersBuffer(new Buffer<Collider>(64))
+                .AddContactEntitiesBuffer(new Buffer<Entity>(64));
 
-            ICompositCondition mustDie = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.CurrentHealth.Value <= 0));
+            ICompositCondition mustDie = new CompositeCondition(LogicOperations.Or)
+                .Add(new FuncCondition(() => entity.CurrentHealth.Value <= 0))
+                .Add(new FuncCondition(() => entity.IsTouchAnotherTeam.Value));
 
             ICompositCondition mustSelfReleased = new CompositeCondition()
                             .Add(new FuncCondition(() => entity.IsDead.Value));
-
-            ICompositCondition canTeleport = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.CurrentEnergy.Value >= entity.EnergyTeleportValue.Value));
 
             ICompositCondition canMove = new CompositeCondition()
                 .Add(new FuncCondition(() => entity.IsDead.Value == false));
@@ -95,18 +90,23 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             entity
                 .AddCanMove(canMove)
                 .AddMustDie(mustDie)
-                .AddCanTeleport(canTeleport)
                 .AddMustSelfReleased(mustSelfReleased);
 
             entity
                 .AddSystem(new RigidbodyMovementSystem())
                 .AddSystem(new RigidbodyRotationSystem())
-                .AddSystem(new EnergyRecoveryTimerSystem())
-                .AddSystem(new StartTeleportSystem())
-                .AddSystem(new TeleportManaConsumptionSystem())
-                .AddSystem(new TeleportProcessSystem());
+                .AddSystem(new ApplyDamageSystem())
+                .AddSystem(new BodyContactsDetectingSystem())
+                .AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService))
+                .AddSystem(new BodyContactsEntitiesOnlyMainHeroSystem())
+                .AddSystem(new DealDamageOnContactSystem())
+                .AddSystem(new DeathMaskTouchDetectorSystem())
+                .AddSystem(new AnotherTeamTouchDetectorSystem())
+                .AddSystem(new DeathSystem())
+                .AddSystem(new DisableCollidersOnDeathSystem())
+                .AddSystem(new SelfRealeseSystem(_entitiesLifeContext));
 
-            _entitiesLifeContext.Add(entity);
+            //_entitiesLifeContext.Add(entity);
 
             return entity;
         }
@@ -138,7 +138,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
-        public Entity CreateHeroEntity(Vector3 position)
+        public Entity CreateHeroEntity2(Vector3 position)
         {
             Entity entity = CreateEmpty();
 
@@ -273,6 +273,111 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddSystem(new DeathSystem())
                 .AddSystem(new DisableCollidersOnDeathSystem())
                 .AddSystem(new SelfRealeseSystem(_entitiesLifeContext));
+
+            _entitiesLifeContext.Add(entity);
+
+            return entity;
+        }
+
+        public Entity CreateHeroEntity(Vector3 position, HeroConfig heroConfig)
+        {
+            Entity entity = CreateEmpty();
+
+            _monoEntitiesFactory.Create(entity, Vector3.zero, heroConfig.PrefabPath);
+
+            entity
+                .AddIsMainHero()
+                .AddTeam(new ReactiveVariable<Teams>(Teams.MainHero))
+                .AddMaxHealth(new ReactiveVariable<float>(heroConfig.MaxHealth))
+                .AddCurrentHealth(new ReactiveVariable<float>(heroConfig.MaxHealth))
+                .AddIsDead()
+                .AddTakeDamageRequest()
+                .AddExplosionCamera(Camera.main)
+                .AddStartAttackRequest()
+                .AddStartAttackEvent()
+                .AddEndAttackEvent()
+                .AddinAttackProcess()
+                .AddExplosionRadius(new ReactiveVariable<float>(heroConfig.ExplosionRadius))
+                .AddExplosionDamage(new ReactiveVariable<float>(heroConfig.ExplosionDamage))
+                .AddExplosionPoint()
+                .AddAttackCooldownInitialTime(new ReactiveVariable<float>(heroConfig.AttackCooldownInitialTime))
+                .AddAttackCooldownCurentTime()
+                .AddInAttackCooldown()
+                .AddContactsDetectingMask(Layers.CharactersMask)
+                .AddContactCollidersBuffer(new Buffer<Collider>(64))
+                .AddContactEntitiesBuffer(new Buffer<Entity>(64));
+
+            ICompositCondition canStartAttack = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.IsDead.Value == false))
+                .Add(new FuncCondition(() => entity.InAttackCooldown.Value == false))
+                .Add(new FuncCondition(() => entity.inAttackProcess.Value == false));
+
+            ICompositCondition mustSelfReleased = new CompositeCondition()
+                            .Add(new FuncCondition(() => entity.IsDead.Value));
+
+            ICompositCondition mustDie = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.CurrentHealth.Value <= 0));
+
+            entity
+                .AddMustDie(mustDie)
+                .AddMustSelfReleased(mustSelfReleased)
+                .AddCanStartAttack(canStartAttack);
+
+            entity
+                .AddSystem(new StartAttackSystem())
+                .AddSystem(new ExplosionContactSystem())
+                .AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService))
+                .AddSystem(new BodyContactsEntitiesExceptedMainHeroSystem())
+                .AddSystem(new ExplosionDamageSystem())
+                .AddSystem(new ExplosionEndAttackSystem())
+                .AddSystem(new AttackCooldownTimerSystem())
+                .AddSystem(new ApplyDamageSystem())
+                .AddSystem(new DeathSystem())
+                .AddSystem(new SelfRealeseSystem(_entitiesLifeContext));
+
+            //_entitiesLifeContext.Add(entity);
+
+            return entity;
+        }
+
+        public Entity CreateBomb(Vector3 position)
+        {
+            Entity entity = CreateEmpty();
+
+            _monoEntitiesFactory.Create(entity, position, "Entities/Bomb");
+
+            entity
+                .AddStartTimeBombEvent()
+                .AddEndAttackBombEvent()
+                .AddInBombTimeProcess()
+                .AddExplosionPoint()
+                .AddInitialTimeBomb(new ReactiveVariable<float>(1))
+                .AddCurrentTimeBomb()
+                .AddStartAttackRequest()
+                .AddStartAttackEvent()
+                .AddinAttackProcess()
+                .AddDamageAttack(new ReactiveVariable<float>(120))
+                .AddRadiusAttack(new ReactiveVariable<float>(2))
+                .AddContactsDetectingMask(Layers.CharactersMask)
+                .AddContactCollidersBuffer(new Buffer<Collider>(64))
+                .AddContactEntitiesBuffer(new Buffer<Entity>(64));
+
+            ICompositCondition canStartAttack = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.inAttackProcess.Value == false));
+
+            entity
+                 .AddCanStartAttack(canStartAttack);
+
+            entity
+                .AddSystem(new DetectedBombSystem())
+                .AddSystem(new ProcessTimerBombSystem())
+                .AddSystem(new BombStartAttackSystem())
+                .AddSystem(new StartAttackSystem())
+                .AddSystem(new BombContactsDetectingSystem())
+                .AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService))
+                .AddSystem(new BodyContactsEntitiesExceptedMainHeroSystem())
+                .AddSystem(new BombDamageSystem())
+                .AddSystem(new EndAttackBombSystem(this));
 
             _entitiesLifeContext.Add(entity);
 

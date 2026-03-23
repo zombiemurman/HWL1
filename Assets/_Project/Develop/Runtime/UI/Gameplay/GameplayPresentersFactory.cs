@@ -18,7 +18,7 @@ namespace Assets._Project.Develop.Runtime.UI.Gameplay
 
         public GameplayScreenPresenter CreateGameplayScreenPresenter(GameplayScreenView gameplayScreenView)
         {
-            return new GameplayScreenPresenter(gameplayScreenView, this);
+            return new GameplayScreenPresenter(gameplayScreenView, _container.Resolve<ProjectPresentersFactory>());
         }
 
         public GameplayRandomSymbolPresenter CreateGameplayRandomSymbolPresenter(GameplayRandomSymbolView view)

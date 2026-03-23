@@ -5,11 +5,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 {
     public class GameplayInputArgs : IInputSceneArgs
     {
-        public GameplayInputArgs(TypeGame typeGame)
+        public GameplayInputArgs(int levelNumber)
         {
-            TypeGame = typeGame;
+            LevelNumber = levelNumber;
         }
 
-        public TypeGame TypeGame { get; }
+        public int LevelNumber { get; }
     }
 }
