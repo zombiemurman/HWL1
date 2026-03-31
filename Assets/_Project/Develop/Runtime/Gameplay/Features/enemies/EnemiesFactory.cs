@@ -36,18 +36,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Enemies
             switch(config)
             {
                 case GhostConfig ghostConfig:
-                    entity = _entitiesFactory.CreateRigidbodyEntity(position);
-                    //entity = _entitiesFactory.CreateGhostEntity(position, ghostConfig);
-                    //_brainsFacttory.CreateGhostBrain(entity);
-
+                    entity = _entitiesFactory.CreateBaseEntity(position, ghostConfig);
                     break;
 
                 default:
                     throw new ArgumentException($"Not support {config.GetType()} type config");
             }
-
-            //entity
-            //    .AddTeam(new ReactiveVariable<Teams>(Teams.Enemies));
 
             _entitiesLifeContext.Add(entity);
 

@@ -109,4 +109,24 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
     {
         public ReactiveVariable<bool> Value;
     }
+
+    public class ItSetMine : IEntityComponent
+    {
+        public ReactiveVariable<bool> Value;
+    }
+
+    public class ItSetExplosion : IEntityComponent
+    {
+        public ReactiveVariable<bool> Value;
+    }
+
+    public class CanSetMine : IEntityComponent
+    {
+        public ICompositCondition Value;
+    }
+
+    public class SetMineRequest : IEntityComponent
+    {
+        public ReactiveEvent<Vector3> Value;
+    }
 }

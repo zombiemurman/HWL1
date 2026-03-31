@@ -11,8 +11,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.StageFeatures
 {
     public class PreperationTriggerService
     {
-        //раставляем бомбы
-        //Списываем деньги
 
         private ReactiveVariable<bool> _hasMainHeroContact = new();
 
@@ -38,8 +36,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.StageFeatures
         {
             if (_nextStageTrigger != null)
                 throw new InvalidOperationException("Trigger already created");
-
-            //_nextStageTrigger = _entitiesFactory.CreateContactTrigger(position);
 
             _nextStageTriggerContacts = _nextStageTrigger.ContactEntitiesBuffer;
         }

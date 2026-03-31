@@ -6,8 +6,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature
     {
         bool IsEnabled { get; set; }
 
-        bool KeyAction { get; }
-
         Vector3 Direction { get; }
     }
 }

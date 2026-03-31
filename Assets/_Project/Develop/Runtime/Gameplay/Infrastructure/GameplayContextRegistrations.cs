@@ -49,7 +49,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             container.RegisterAsSingle(CreateGameplayPopupService);
             container.RegisterAsSingle(CreateEntitiesFactory);
             container.RegisterAsSingle(CreateEntitiesLifeContext);
-            container.RegisterAsSingle(CreateTestGameplay);
             container.RegisterAsSingle(CreateCollidersRegistryService);
             container.RegisterAsSingle(CreateBrainsFacttory);
             container.RegisterAsSingle(CreateAIBrainsContext);
@@ -123,11 +122,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         {
             return new CollidersRegistryService();
         }
-
-        private static TestGameplay CreateTestGameplay(DIContainer container)
-            => new TestGameplay(
-                container.Resolve<EntitiesFactory>(),
-                container.Resolve<BrainsFactory>());
 
         private static MonoEntitiesFactory CreateMomoEntitiesFactory(DIContainer container)
         {

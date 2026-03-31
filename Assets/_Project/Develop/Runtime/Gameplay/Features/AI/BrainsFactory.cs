@@ -3,7 +3,9 @@ using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
 using Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeatures;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
+using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using Assets._Project.Develop.Runtime.Utilities.StateMachineCore;
@@ -43,39 +45,40 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
             _entitiesFactory = _container.Resolve<EntitiesFactory>();
         }
 
-        public AIStateMachine CreateBombExplosionStateMachine(Entity entity)
+        public AIStateMachine CreateMineAndExplosionStateMachine(Entity entity)
         {
-            //List<IDisposable> disposables = new List<IDisposable>();
+            IInputService mouseInput = _inputFactory.CreateMousePointImput();
 
-            ExplosionState explosionState = new ExplosionState(entity);
+            CreateExplosionByClickState explosionState = new CreateExplosionByClickState(entity, mouseInput);
 
-            //BombSate bombSate = new BombSate(_entitiesFactory);
-
-            //TimerService explosionTimer = _timerServiceFactory.Create(3f);
-            //disposables.Add(explosionTimer);
-            //disposables.Add(explosionState.Entered.Subscribe(explosionTimer.Restart));
-
-            //TimerService bombTimer = _timerServiceFactory.Create(3f);
-            //disposables.Add(bombTimer);
-            //disposables.Add(bombSate.Entered.Subscribe(bombTimer.Restart));
-
-            //FuncCondition explosionToBombCondition = new FuncCondition(() => explosionTimer.IsOver);
-            //FuncCondition bombToExplosionCondition = new FuncCondition(() => bombTimer.IsOver);
+            PlaceAMineState placeAMineState = new PlaceAMineState(
+                entity, 
+                mouseInput,
+                _container.Resolve<WalletService>(),
+                _container.Resolve<StageProviderService>().LevelConfig.PriceBomb);
 
             AIStateMachine stateMachine = new AIStateMachine();
 
+            ICompositCondition mineToExplosionState = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.ItSetMine.Value == false))
+                .Add(new FuncCondition(() => entity.ItSetExplosion.Value));
+
+            ICompositCondition explosionToMineState = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.ItSetMine.Value))
+                .Add(new FuncCondition(() => entity.ItSetExplosion.Value == false));
+
+            stateMachine.AddState(placeAMineState);
             stateMachine.AddState(explosionState);
-            //stateMachine.AddState(bombSate);
 
-            //stateMachine.AddTransition(explosionState, bombSate, explosionToBombCondition);
-            //stateMachine.AddTransition(bombSate, explosionState, bombToExplosionCondition);
-
+            stateMachine.AddTransition(placeAMineState, explosionState, mineToExplosionState);
+            stateMachine.AddTransition(explosionState, placeAMineState, explosionToMineState);
+            
             return stateMachine;
         }
 
-        public StateMachineBrain CreateBombExplosionBrain(Entity entity)
+        public StateMachineBrain CreateExplosionBrain(Entity entity)
         {
-            AIStateMachine stateMachine = CreateBombExplosionStateMachine(entity);
+            AIStateMachine stateMachine = CreateMineAndExplosionStateMachine(entity);
             StateMachineBrain machineBrain = new StateMachineBrain(stateMachine);
 
             _brainContext.SetFor(entity, machineBrain);
@@ -184,14 +187,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
             IInputService desktopInput = _inputFactory.CreateDesktopInput();
             PlayerInputMovementState movementState = new PlayerInputMovementState(entity, _inputFactory.CreateDesktopInput());
 
-            //ReactiveVariable<Entity> currenttarget = entity.CurrentTarget;
-
             ICompositCondition fromMovementToCombatStateCondition = new CompositeCondition()
-                //.Add(new FuncCondition(() => currenttarget.Value != null))
                 .Add(new FuncCondition(() => desktopInput.Direction == Vector3.zero));
 
             ICompositCondition fromCombatToMovementStateCondition = new CompositeCondition(LogicOperations.Or)
-                //.Add(new FuncCondition(() => currenttarget.Value == null))
                 .Add(new FuncCondition(() => desktopInput.Direction != Vector3.zero));
 
             AIStateMachine behaviour = new AIStateMachine();
@@ -216,10 +215,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
             AttackTriggerState attackTriggerState = new AttackTriggerState(entity, _inputFactory.CreateAttackInput());
 
             ICondition canAttack = entity.CanStartAttack;
-
-            //Transform transform = entity.Transform;
-
-            //ReactiveVariable<Entity> currentTarget = entity.CurrentTarget;
 
             ICompositCondition fromRotateToAttackCondition = new CompositeCondition()
                 .Add(canAttack);

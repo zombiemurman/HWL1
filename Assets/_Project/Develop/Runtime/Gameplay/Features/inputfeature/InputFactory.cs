@@ -13,5 +13,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature
         
         public AttackInput CreateAttackInput()
             => new AttackInput();
+
+        public MousePointImput CreateMousePointImput()
+            => new MousePointImput();
     }
 }

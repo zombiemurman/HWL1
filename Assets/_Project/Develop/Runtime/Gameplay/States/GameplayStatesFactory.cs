@@ -1,5 +1,6 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
+using Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
 using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeatures;
@@ -21,6 +22,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
     {
         private readonly DIContainer _container;
 
+        private readonly InputFactory _inputFactory;
+
         private readonly TimerServiceFactory _timerServiceFactory;
 
         private readonly EntitiesFactory _entitiesFactory;
@@ -32,6 +35,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             _timerServiceFactory = _container.Resolve<TimerServiceFactory>();
 
             _entitiesFactory = _container.Resolve<EntitiesFactory>();
+
+            _inputFactory = _container.Resolve<InputFactory>();
         }
 
         public PreperationState CreatePreperationState()
@@ -74,38 +79,34 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
             StageProviderService stageProviderService = _container.Resolve<StageProviderService>();
 
-            BombSate bombState = new BombSate(
-                _entitiesFactory, 
-                _container.Resolve<WalletService>(),
-                stageProviderService.LevelConfig.PriceBomb);
+            IdleState idleState = new IdleState(_container.Resolve<MainHeroHolderService>());
 
             TimerService idleTimer = _timerServiceFactory.Create(10f);
             disposables.Add(idleTimer);
-            disposables.Add(bombState.Entered.Subscribe(idleTimer.Restart));
+            disposables.Add(idleState.Entered.Subscribe(idleTimer.Restart));
 
             StageProcessState stageProcessState = CreateStageProcessState();
 
-            ICompositCondition bombToStageProcessCondition = new CompositeCondition()
+            ICompositCondition idleToStageProcessCondition = new CompositeCondition()
                 .Add(new FuncCondition(() => idleTimer.IsOver))
                 .Add(new FuncCondition(() => stageProviderService.HasNextStage()));
 
-            FuncCondition stageProcessToBombCondition =
+            FuncCondition stageProcessToIdleCondition =
                 new FuncCondition(() => stageProviderService.CurrentStageResult.Value == StageResults.Complited);
 
             GameplayStateMachine coreLoopState = new GameplayStateMachine();
 
-            coreLoopState.AddState(bombState);
+            coreLoopState.AddState(idleState);
             coreLoopState.AddState(stageProcessState);
 
-            coreLoopState.AddTransition(bombState, stageProcessState, bombToStageProcessCondition);
-            coreLoopState.AddTransition(stageProcessState, bombState, stageProcessToBombCondition);
+            coreLoopState.AddTransition(idleState, stageProcessState, idleToStageProcessCondition);
+            coreLoopState.AddTransition(stageProcessState, idleState, stageProcessToIdleCondition);
 
             return coreLoopState;
         }
 
         public GameplayStateMachine CreateGameplayStateMachine(GameplayInputArgs gameplayInputArgs)
         {
-            //PreperationTriggerService preperationTriggerService = _container.Resolve<PreperationTriggerService>();
 
             StageProviderService stageProviderService = _container.Resolve<StageProviderService>();
 
@@ -118,7 +119,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             WinState winState = CreateWinState(gameplayInputArgs);
 
             ICompositCondition coreLoopToWinStateCondition = new CompositeCondition()
-                //.Add(new FuncCondition(() => preperationTriggerService.HasMainHeroContact.Value))
                 .Add(new FuncCondition(() => stageProviderService.CurrentStageResult.Value == StageResults.Complited))
                 .Add(new FuncCondition(() => stageProviderService.HasNextStage() == false));
 

@@ -40,7 +40,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
 
             Entity entity = _entitiesFactory.CreateHeroEntity(position, config);
 
-            _brainsFacttory.CreateBombExplosionBrain(entity);
+            _brainsFacttory.CreateExplosionBrain(entity);
 
             _entitiesLifeContext.Add(entity);
 

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fa6fa651fc0f6540bb46cf213242dfd, type: 3}
   m_Name: GhostConfig
   m_EditorClassIdentifier: 
-  <PrefabPath>k__BackingField: Entities/Ghost
-  <MoveSpeed>k__BackingField: 9
+  <PrefabPath>k__BackingField: Entities/TestEntity
+  <MoveSpeed>k__BackingField: 0.46
   <RotationSpeed>k__BackingField: 900
   <MaxHealth>k__BackingField: 100
   <BodyContactDamage>k__BackingField: 50

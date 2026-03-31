@@ -9,13 +9,17 @@ using Assets._Project.Develop.Runtime.Gameplay.Features.Attack.TakeDamage;
 using Assets._Project.Develop.Runtime.Gameplay.Features.BombFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.ContactTakeDamage;
 using Assets._Project.Develop.Runtime.Gameplay.Features.ExpolosionFeatures;
+using Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.lifecycle;
 using Assets._Project.Develop.Runtime.Gameplay.Features.LifeCycle;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Sensors;
+using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Teleport;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
+using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.Utilities;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet;
@@ -47,11 +51,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             _collidersRegistryService = _container.Resolve<CollidersRegistryService>();
         }
 
-        public Entity CreateRigidbodyEntity(Vector3 position)
+        public Entity CreateBaseEntity(Vector3 position, GhostConfig ghostConfig)
         {
             Entity entity = CreateEmpty();
 
-            _monoEntitiesFactory.Create(entity, position, "Entities/TestEntity");
+            _monoEntitiesFactory.Create(entity, position, ghostConfig.PrefabPath);
 
             RigidbodyMovementConfig config = _configsProviderService.GetConfig<RigidbodyMovementConfig>();
 
@@ -61,15 +65,15 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddTeam(new ReactiveVariable<Teams>(Teams.Enemies))
                 .AddIsTouchAnotherTeam()
                 .AddIsTouchDeatMask()
-                .AddBodyContacDamage(new ReactiveVariable<float>(20))
+                .AddBodyContacDamage(new ReactiveVariable<float>(ghostConfig.BodyContactDamage))
                 .AddinAttackProcess(new ReactiveVariable<bool>(true))
                 .AddMoveDirection(new ReactiveVariable<Vector3>(direction))
                 .AddIsMoving()
                 .AddRotationDirection()
-                .AddMoveSpeed(new ReactiveVariable<float>(1))
-                .AddRotationSpeed(new ReactiveVariable<float>(700))
-                .AddMaxHealth(new ReactiveVariable<float>(100))
-                .AddCurrentHealth(new ReactiveVariable<float>(100))
+                .AddMoveSpeed(new ReactiveVariable<float>(ghostConfig.MoveSpeed))
+                .AddRotationSpeed(new ReactiveVariable<float>(ghostConfig.RotationSpeed))
+                .AddMaxHealth(new ReactiveVariable<float>(ghostConfig.MaxHealth))
+                .AddCurrentHealth(new ReactiveVariable<float>(ghostConfig.MaxHealth))
                 .AddIsDead()
                 .AddTakeDamageRequest()
                 .AddDeathMask(Layers.CharactersMask)
@@ -292,6 +296,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddCurrentHealth(new ReactiveVariable<float>(heroConfig.MaxHealth))
                 .AddIsDead()
                 .AddTakeDamageRequest()
+                .AddSetMineRequest()
+                .AddItSetMine()
+                .AddItSetExplosion()
                 .AddExplosionCamera(Camera.main)
                 .AddStartAttackRequest()
                 .AddStartAttackEvent()
@@ -310,7 +317,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             ICompositCondition canStartAttack = new CompositeCondition()
                 .Add(new FuncCondition(() => entity.IsDead.Value == false))
                 .Add(new FuncCondition(() => entity.InAttackCooldown.Value == false))
-                .Add(new FuncCondition(() => entity.inAttackProcess.Value == false));
+                .Add(new FuncCondition(() => entity.inAttackProcess.Value == false))
+                .Add(new FuncCondition(() => entity.ItSetMine.Value == false))
+                .Add(new FuncCondition(() => entity.ItSetExplosion.Value));
+
+            ICompositCondition canSetMine = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.ItSetMine.Value))
+                .Add(new FuncCondition(() => entity.ItSetExplosion.Value == false));
 
             ICompositCondition mustSelfReleased = new CompositeCondition()
                             .Add(new FuncCondition(() => entity.IsDead.Value));
@@ -321,9 +334,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             entity
                 .AddMustDie(mustDie)
                 .AddMustSelfReleased(mustSelfReleased)
+                .AddCanSetMine(canSetMine)
                 .AddCanStartAttack(canStartAttack);
 
             entity
+                .AddSystem(new SetMineSystem(this))
                 .AddSystem(new StartAttackSystem())
                 .AddSystem(new ExplosionContactSystem())
                 .AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService))
@@ -335,12 +350,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddSystem(new DeathSystem())
                 .AddSystem(new SelfRealeseSystem(_entitiesLifeContext));
 
-            //_entitiesLifeContext.Add(entity);
-
             return entity;
         }
 
-        public Entity CreateBomb(Vector3 position)
+        public Entity CreateMine(Vector3 position)
         {
             Entity entity = CreateEmpty();
 

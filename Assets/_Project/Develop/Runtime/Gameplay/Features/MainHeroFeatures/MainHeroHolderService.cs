@@ -24,10 +24,22 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
         public IReadOnlyEvent<Entity> HeroRegistred => _heroRegistred;
 
         public Entity MainHero => _mainHero;
+        
         public void Initialize()
         {
             _entitiesLifeContext.Added += OnEntityAdded;
         }
+
+        public void SetMine(bool value)
+        {
+            _mainHero.ItSetMine.Value = value;
+        }
+
+        public void SetExplosion(bool value)
+        {
+            _mainHero.ItSetExplosion.Value = value;
+        }
+
         public void Dispose()
         {
             _entitiesLifeContext.Added -= OnEntityAdded;
