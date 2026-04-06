@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HeroConfig
   m_EditorClassIdentifier: 
   <PrefabPath>k__BackingField: Entities/ExplosionEntity
-  <MaxHealth>k__BackingField: 15
+  <MaxHealth>k__BackingField: 100
   <ExplosionRadius>k__BackingField: 2
   <ExplosionDamage>k__BackingField: 120
   <AttackCooldownInitialTime>k__BackingField: 2

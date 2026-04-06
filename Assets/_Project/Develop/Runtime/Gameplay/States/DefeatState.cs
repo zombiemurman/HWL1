@@ -1,5 +1,6 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Meta.features.Statistic;
+using Assets._Project.Develop.Runtime.UI.Gameplay;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
 using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
@@ -19,18 +20,22 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
         private readonly ICoroutinesPerformer _coroutinesPerformer;
 
+        private readonly GameplayPopupService _gameplayPopupService;
+
         public DefeatState(
             IInputService inputService,
             StatisticsModel statistics,
             StatisticsDataProvider statisticsDataProvider,
             SceneSwitcherService sceneSwitcherService,
-            ICoroutinesPerformer coroutinesPerformer) : base(inputService)
+            ICoroutinesPerformer coroutinesPerformer,
+            GameplayPopupService gameplayPopupService) : base(inputService)
         {
             _sceneSwitcherService = sceneSwitcherService;
             _coroutinesPerformer = coroutinesPerformer;
 
             _statistics = statistics;
             _statisticsDataProvider = statisticsDataProvider;
+            _gameplayPopupService = gameplayPopupService;
         }
 
         public override void Enter()
@@ -42,14 +47,16 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             _statistics.UpdateDefeat();
 
             _coroutinesPerformer.StartPerform(_statisticsDataProvider.SaveAsync());
+
+            _gameplayPopupService.OpenDefeatPopup();
         }
 
         public void Update(float deltaTime)
         {
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                _coroutinesPerformer.StartPerform(_sceneSwitcherService.ProcessSwitchTo(Scenes.MainMenu));
-            }
+            //if (Input.GetKeyDown(KeyCode.Q))
+            //{
+            //    _coroutinesPerformer.StartPerform(_sceneSwitcherService.ProcessSwitchTo(Scenes.MainMenu));
+            //}
         }
     }
 }

@@ -2,6 +2,7 @@
 using Assets._Project.Develop.Runtime.Gameplay.Infrastructure;
 using Assets._Project.Develop.Runtime.Meta.features.Statistic;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
+using Assets._Project.Develop.Runtime.UI.Gameplay;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
 using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
@@ -26,6 +27,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
         private readonly ICoroutinesPerformer _coroutinesPerformer;
 
+        private readonly GameplayPopupService _gameplayPopupService;
+
         private readonly int _winAmount;
 
         public WinState(
@@ -37,7 +40,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             SceneSwitcherService sceneSwitcherService,
             ICoroutinesPerformer coroutinesPerformer,
             WalletService walletService,
-            int winAmount) : base(inputService)
+            int winAmount,
+            GameplayPopupService gameplayPopupService) : base(inputService)
         {
             _statistics = statistics;
             _statisticsDataProvider = statisticsDataProvider;
@@ -47,6 +51,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             _coroutinesPerformer = coroutinesPerformer;
             _walletService = walletService;
             _winAmount = winAmount;
+            _gameplayPopupService = gameplayPopupService;
         }
 
         public override void Enter()
@@ -61,6 +66,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
             _coroutinesPerformer.StartPerform(_statisticsDataProvider.SaveAsync());
             _coroutinesPerformer.StartPerform(_playerDataProvider.SaveAsync());
+
+            _gameplayPopupService.OpenWinPopup();
         }
 
         public void Update(float deltaTime)

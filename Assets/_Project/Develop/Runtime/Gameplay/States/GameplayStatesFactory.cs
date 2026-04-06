@@ -8,6 +8,7 @@ using Assets._Project.Develop.Runtime.Gameplay.Infrastructure;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.features.Statistic;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
+using Assets._Project.Develop.Runtime.UI.Gameplay;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders;
@@ -60,7 +61,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
                 _container.Resolve<SceneSwitcherService>(),
                 _container.Resolve<ICoroutinesPerformer>(),
                 _container.Resolve<WalletService>(),
-                _container.Resolve<StageProviderService>().LevelConfig.WinAmount);
+                _container.Resolve<StageProviderService>().LevelConfig.WinAmount,
+                _container.Resolve<GameplayPopupService>());
         }
 
         public DefeatState CreateDefeatState()
@@ -70,7 +72,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
                 _container.Resolve<StatisticsModel>(),
                 _container.Resolve<StatisticsDataProvider>(),
                 _container.Resolve<SceneSwitcherService>(),
-                _container.Resolve<ICoroutinesPerformer>());
+                _container.Resolve<ICoroutinesPerformer>(),
+                _container.Resolve<GameplayPopupService>());
         }
 
         public GameplayStateMachine CreateCoreLoopState()
@@ -81,7 +84,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
             IdleState idleState = new IdleState(_container.Resolve<MainHeroHolderService>());
 
-            TimerService idleTimer = _timerServiceFactory.Create(10f);
+            TimerService idleTimer = _timerServiceFactory.Create(3f);
             disposables.Add(idleTimer);
             disposables.Add(idleState.Entered.Subscribe(idleTimer.Restart));
 

@@ -8,5 +8,7 @@
         public const string GameplayScreen = nameof(GameplayScreen);
         public const string GameplayRandomSymbol = nameof(GameplayRandomSymbol);
         public const string TextPopup = nameof(TextPopup);
+        public const string WinPopup = nameof(WinPopup);
+        public const string DefeatPopup = nameof(DefeatPopup);
     }
 }
