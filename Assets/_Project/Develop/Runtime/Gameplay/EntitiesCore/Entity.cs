@@ -46,8 +46,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 
         public void Dispose()
         {
-            foreach(Entity childEntity in _childEntities)
-                childEntity.Dispose();
+            //foreach(Entity childEntity in _childEntities)
+            //    childEntity.Dispose();
 
             foreach(IDisposableSystem disposable in _disposables)
                 disposable.OnDispose();

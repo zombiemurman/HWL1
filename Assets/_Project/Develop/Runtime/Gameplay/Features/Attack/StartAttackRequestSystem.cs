@@ -2,11 +2,11 @@
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
-using UnityEngine;
+using System;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
 {
-    public class StartAttackSystem : IInitializableSystem, IUpdatableSystem
+    public class StartAttackRequestSystem : IInitializableSystem, IDisposableSystem
     {
         private ReactiveEvent _startAttackRequest;
         private ReactiveEvent _startAttackEvent;
@@ -15,6 +15,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
 
         private ICompositCondition _canStartAttack;
 
+        private IDisposable _attackRequestDispouse;
 
         public void OnInit(Entity entity)
         {
@@ -25,11 +26,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
 
             _canStartAttack = entity.CanStartAttack;
 
+            _attackRequestDispouse = _startAttackRequest.Subscribe(OnAttackRequest);
         }
 
-        public void OnUpdate(float deltaTime)
+        public void OnDispose()
         {
-            OnAttackRequest();
+            _attackRequestDispouse.Dispose();
         }
 
         private void OnAttackRequest()
@@ -40,6 +42,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
 
                 _startAttackEvent.Invoke();
 
+            }
+            else
+            {
             }
         }
     }

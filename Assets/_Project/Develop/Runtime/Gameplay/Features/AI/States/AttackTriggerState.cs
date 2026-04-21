@@ -13,6 +13,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
             _attackRequest = entity.StartAttackRequest;
         }
 
+        public override void Enter()
+        {
+            base.Enter();
+
+            _attackRequest?.Invoke();
+        }
+
         public void Update(float deltaTime)
         {
         }
