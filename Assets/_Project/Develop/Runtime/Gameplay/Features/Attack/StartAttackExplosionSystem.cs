@@ -7,15 +7,17 @@ using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
 {
-    public class StartAttackSystem : IInitializableSystem, IUpdatableSystem
+    public class StartAttackExplosionSystem : IInitializableSystem, IDisposableSystem
     {
         private ReactiveEvent _startAttackRequest;
         private ReactiveEvent _startAttackEvent;
 
         private ReactiveVariable<bool> _inAttackProcess;
+        private ReactiveVariable<Vector3> _explosionPoint;
 
         private ICompositCondition _canStartAttack;
 
+        private IDisposable _attackRequestDispouse;
 
         public void OnInit(Entity entity)
         {
@@ -23,24 +25,32 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
             _startAttackEvent = entity.StartAttackEvent;
 
             _inAttackProcess = entity.inAttackProcess;
+            _explosionPoint = entity.ExplosionPoint;
 
             _canStartAttack = entity.CanStartAttack;
 
+            _attackRequestDispouse = _startAttackRequest.Subscribe(OnAttackRequest);
         }
 
-        public void OnUpdate(float deltaTime)
+        public void OnDispose()
         {
-            OnAttackRequest();
+            _attackRequestDispouse.Dispose();   
         }
 
         private void OnAttackRequest()
         {
-            if (_canStartAttack.Evaluate())
+            if(_canStartAttack.Evaluate())
             {
                 _inAttackProcess.Value = true;
-
+                
                 _startAttackEvent.Invoke();
 
+                Debug.Log("Start Attack");
+            }
+            else
+            {
+                _explosionPoint.Value = Vector3.zero;
+                Debug.Log("Cant attack");
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Entities;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
@@ -37,6 +38,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Enemies
             {
                 case GhostConfig ghostConfig:
                     entity = _entitiesFactory.CreateBaseEntity(position, ghostConfig);
+                    break;
+
+                case CatapultConfig catapultConfig:
+                    entity = _entitiesFactory.CreateCatapultEntity(position, catapultConfig);
+                    _entitiesFactory.AddAbility(entity, AbilityTipes.Shoot, _entitiesFactory.CreateShootAbility(entity, catapultConfig.ShootAbilityConfig));
                     break;
 
                 default:

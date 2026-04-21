@@ -1,4 +1,5 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Attack;
 using Assets._Project.Develop.Runtime.Gameplay.Features.ExpolosionFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
@@ -19,7 +20,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
 
         private ReactiveEvent<Vector3> _setMineRequest;
 
-        private ReactiveVariable<bool> _itSetMine;
+        private ReactiveVariable<bool> _abilityActive;
 
         private IInputService _inputService;
 
@@ -31,8 +32,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
             WalletService walletService, 
             int priceMine)
         {
-            _setMineRequest = entity.SetMineRequest;
-            _itSetMine = entity.ItSetMine;
+            Entity installMineAbility = entity.AbilityStorage[AbilityTipes.Turret];
+
+            _setMineRequest = installMineAbility.SetMineRequest;
+            _abilityActive = installMineAbility.AbilityActive;
 
             _inputService = inputService;
             _walletService = walletService;
@@ -41,7 +44,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
 
         public void Update(float deltaTime)
         {
-            if (_itSetMine.Value == false)
+            if (_abilityActive.Value == false)
                 return;
 
             if (_inputService.Direction != Vector3.zero)

@@ -1,5 +1,6 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
 using Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
@@ -60,12 +61,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
             AIStateMachine stateMachine = new AIStateMachine();
 
             ICompositCondition mineToExplosionState = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.ItSetMine.Value == false))
-                .Add(new FuncCondition(() => entity.ItSetExplosion.Value));
+                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTipes.Turret].AbilityActive.Value == false))
+                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTipes.Explosion].AbilityActive.Value));
 
             ICompositCondition explosionToMineState = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.ItSetMine.Value))
-                .Add(new FuncCondition(() => entity.ItSetExplosion.Value == false));
+                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTipes.Turret].AbilityActive.Value))
+                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTipes.Explosion].AbilityActive.Value == false));
 
             stateMachine.AddState(placeAMineState);
             stateMachine.AddState(explosionState);
@@ -212,7 +213,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
         {
             RotateToMouseState rotateToMouseState = new RotateToMouseState(entity, _inputFactory.CreateMouseRotationInput());
 
-            AttackTriggerState attackTriggerState = new AttackTriggerState(entity, _inputFactory.CreateAttackInput());
+            AttackTriggerState attackTriggerState = new AttackTriggerState(entity);
 
             ICondition canAttack = entity.CanStartAttack;
 
@@ -233,6 +234,70 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
 
             return stateMachine;
         }
+
+        public StateMachineBrain CreateMTurelBrain(Entity entity, ITargetSelector targetSelector)
+        {
+            AIStateMachine combatState = CreateRotationAttackStateMachine(entity);
+
+            AIStateMachine behaviour = new AIStateMachine();
+
+            behaviour.AddState(combatState);
+
+            FindTargetState findTargetState = new FindTargetState(targetSelector, _entitiesLifeContext, entity);
+
+            AIParallelState parallelState = new AIParallelState(findTargetState, behaviour);
+
+            AIStateMachine rootSateMachine = new AIStateMachine();
+            rootSateMachine.AddState(parallelState);
+
+            StateMachineBrain stateMachineBrain = new StateMachineBrain(rootSateMachine);
+
+            _brainContext.SetFor(entity, stateMachineBrain);
+
+            return stateMachineBrain;
+        }
+
+        private AIStateMachine CreateRotationAttackStateMachine(Entity entity)
+        {
+            RotateToTargetState rotateToTargetState = new RotateToTargetState(entity);
+
+            AttackTriggerState attackTriggerState = new AttackTriggerState(entity);
+
+            ICondition canAttack = entity.CanStartAttack;
+
+            Transform transform = entity.EntityTransform;
+
+            ReactiveVariable<Entity> currentTarget = entity.CurrentTarget;
+
+            ICompositCondition fromRotateToAttackCondition = new CompositeCondition()
+                .Add(canAttack)
+                .Add(new FuncCondition(() =>
+                {
+                    Entity target = currentTarget.Value;
+
+                    if (target == null)
+                        return false;
+
+                    float angleToTarget = Quaternion.Angle(transform.rotation, Quaternion.LookRotation(target.EntityTransform.position - transform.position));
+
+                    return angleToTarget < 3f;
+                }));
+
+            ReactiveVariable<bool> inAttackProcess = entity.inAttackProcess;
+
+            ICondition fromAttackToRotateStateCondition = new FuncCondition(() => inAttackProcess.Value == false);
+
+            AIStateMachine stateMachine = new AIStateMachine();
+
+            stateMachine.AddState(rotateToTargetState);
+            stateMachine.AddState(attackTriggerState);
+
+            stateMachine.AddTransition(rotateToTargetState, attackTriggerState, fromRotateToAttackCondition);
+            stateMachine.AddTransition(attackTriggerState, rotateToTargetState, fromAttackToRotateStateCondition);
+
+            return stateMachine;
+        }
+
 
     }
 }

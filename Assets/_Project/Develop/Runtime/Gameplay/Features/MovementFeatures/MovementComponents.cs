@@ -39,4 +39,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures
     {
         public ICompositCondition Value;
     }
+
+    public class MovingToDistance : IEntityComponent
+    {
+        public ReactiveVariable<float> Value;
+    }
+
+    public class IsStopMoving : IEntityComponent
+    {
+        public ReactiveVariable<bool> Value;
+    }
 }

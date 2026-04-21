@@ -509,6 +509,54 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures.CanRotate() {Value = value});
 		}
 
+		public Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures.MovingToDistance MovingToDistanceC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures.MovingToDistance>();
+
+		public Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Single> MovingToDistance => MovingToDistanceC.Value;
+
+		public bool TryGetMovingToDistance(out Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Single> value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures.MovingToDistance component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Single>);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddMovingToDistance()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures.MovingToDistance() {Value = new Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Single>() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddMovingToDistance(Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Single> value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures.MovingToDistance() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures.IsStopMoving IsStopMovingC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures.IsStopMoving>();
+
+		public Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean> IsStopMoving => IsStopMovingC.Value;
+
+		public bool TryGetIsStopMoving(out Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean> value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures.IsStopMoving component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean>);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddIsStopMoving()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures.IsStopMoving() {Value = new Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean>() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddIsStopMoving(Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean> value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.MovementFeatures.IsStopMoving() {Value = value});
+		}
+
 		public Assets._Project.Develop.Runtime.Gameplay.Features.MainHeroFeatures.IsMainHero IsMainHeroC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.MainHeroFeatures.IsMainHero>();
 
 		public Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean> IsMainHero => IsMainHeroC.Value;
@@ -1600,6 +1648,54 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddCurrentTarget(Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity> value)
 		{
 			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.AI.CurrentTarget() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityStorage AbilityStorageC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityStorage>();
+
+		public System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTipes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity> AbilityStorage => AbilityStorageC.Value;
+
+		public bool TryGetAbilityStorage(out System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTipes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity> value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityStorage component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTipes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity>);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddAbilityStorage()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityStorage() {Value = new System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTipes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity>() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddAbilityStorage(System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTipes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity> value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityStorage() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityActive AbilityActiveC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityActive>();
+
+		public Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean> AbilityActive => AbilityActiveC.Value;
+
+		public bool TryGetAbilityActive(out Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean> value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityActive component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean>);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddAbilityActive()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityActive() {Value = new Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean>() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddAbilityActive(Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean> value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityActive() {Value = value});
 		}
 
 		public Assets._Project.Develop.Runtime.Gameplay.Common.RigidbodyComponent RigidbodyC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Common.RigidbodyComponent>();

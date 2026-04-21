@@ -1,10 +1,14 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Components;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MainHeroFeatures;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using System;
+using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
 {
@@ -30,14 +34,25 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
             _entitiesLifeContext.Added += OnEntityAdded;
         }
 
-        public void SetMine(bool value)
+        public void SetMine()
         {
-            _mainHero.ItSetMine.Value = value;
+            AbilityActivityOff();
+
+            SetAbilityActiveOn(AbilityTipes.Mine);
         }
 
-        public void SetExplosion(bool value)
+        public void SetTurel()
         {
-            _mainHero.ItSetExplosion.Value = value;
+            AbilityActivityOff();
+
+            SetAbilityActiveOn(AbilityTipes.Turret);
+        }
+
+        public void SetExplosion()
+        {
+            AbilityActivityOff();
+
+            SetAbilityActiveOn(AbilityTipes.Explosion);
         }
 
         public void Dispose()
@@ -56,6 +71,29 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
                 _heroRegistred?.Invoke(entity);
             }
         }
+
+        private void AbilityActivityOff()
+        {
+            if (_mainHero.TryGetAbilityStorage(out Dictionary<AbilityTipes, Entity> abilityStorage))
+            {
+                foreach (KeyValuePair<AbilityTipes, Entity> item in abilityStorage)
+                {
+                    if(item.Value.TryGetAbilityActive(out ReactiveVariable<bool> abilityActive))
+                        abilityActive.Value = false;
+                }
+            }
+        }
+
+        private void SetAbilityActiveOn(AbilityTipes abilityTipes)
+        {
+            if (_mainHero.TryGetAbilityStorage(out Dictionary<AbilityTipes, Entity> abilityStorage))
+            {
+                if(abilityStorage.ContainsKey(abilityTipes))
+                    abilityStorage[abilityTipes].AbilityActive.Value = true;
+            }
+        }
+
+
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using System;
 using UnityEngine;
@@ -18,9 +19,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.ExpolosionFeatures
 
         protected override void OnEntityStartedWork(Entity entity)
         {
-            _position = entity.ExplosionPoint;
+            Entity explosionAbility = entity.AbilityStorage[AbilityTipes.Explosion];
 
-            _starAttack = entity.StartAttackEvent;
+            _position = explosionAbility.ExplosionPoint;
+
+            _starAttack = explosionAbility.StartAttackEvent;
 
             _startAttackDisposable = _starAttack.Subscribe(OnStartAttack);
         }

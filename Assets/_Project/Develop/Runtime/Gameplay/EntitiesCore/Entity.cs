@@ -17,9 +17,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
         private readonly List<IUpdatableSystem> _updatables = new();
         private readonly List<IDisposableSystem> _disposables = new();
 
+        private readonly List<Entity> _childEntities = new();
+
         private bool _isInit;
 
         public bool IsInit => _isInit;
+
+        public IReadOnlyList<Entity> ChildEntities => _childEntities; 
 
         public void Initialize()
         {
@@ -42,6 +46,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 
         public void Dispose()
         {
+            foreach(Entity childEntity in _childEntities)
+                childEntity.Dispose();
+
             foreach(IDisposableSystem disposable in _disposables)
                 disposable.OnDispose();
 
@@ -104,5 +111,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return this;
         }
 
+        public Entity AddChildEntity(Entity entity)
+        {
+            _childEntities.Add(entity);
+
+            return this;
+        }
     }
 }

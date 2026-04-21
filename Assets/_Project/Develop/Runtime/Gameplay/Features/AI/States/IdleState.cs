@@ -17,16 +17,15 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
         {
             base.Enter();
 
-            _mainHeroHolderService.SetMine(true);
-            _mainHeroHolderService.SetExplosion(false);
+            _mainHeroHolderService.SetTurel();
         }
 
         public override void Exit()
         {
             base.Exit();
 
-            _mainHeroHolderService.SetMine(false);
-            _mainHeroHolderService.SetExplosion(true);
+
+            _mainHeroHolderService.SetExplosion();
         }
 
         public void Update(float deltaTime)

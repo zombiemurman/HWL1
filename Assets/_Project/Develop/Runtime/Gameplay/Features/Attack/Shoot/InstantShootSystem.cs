@@ -39,7 +39,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack.Shoot
 
         private void OnAttackDelayEnd()
         {
-            _entitiesFactory.CreateProjectile(_shootPoint.position, _shootPoint.forward, _damage.Value);
+            Vector3 direction = (Vector3.zero - _shootPoint.position).normalized;
+            _entitiesFactory.CreateProjectile(_shootPoint.position, direction, _damage.Value);
         }
     }
 }
