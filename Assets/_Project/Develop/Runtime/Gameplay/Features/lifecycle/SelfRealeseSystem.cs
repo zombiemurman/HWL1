@@ -29,9 +29,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.LifeCycle
         {
             if (_mustSelfReleased.Evaluate())
             {
-                foreach (Entity entity in _entity.ChildEntities)
-                    _lifeContext.Release(entity);
-
                 _lifeContext.Release(_entity);
             }
                 

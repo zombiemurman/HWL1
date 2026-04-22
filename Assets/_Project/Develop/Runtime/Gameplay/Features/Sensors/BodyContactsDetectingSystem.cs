@@ -35,9 +35,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Sensors
             if (_inAttackProcess.Value == false)
                 return;
 
-            if (_debugText.Value == "Puddle")
-                Debug.Log("Puddle");
-
             Vector3 bottom = _transform.position + Vector3.up;
             Vector3 top = _transform.position - Vector3.up;
 

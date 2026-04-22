@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility;
+using System;
 using System.Collections.Generic;
 
 
@@ -42,6 +43,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems
 
         public void Release(Entity entity)
         {
+            foreach(Entity entityChild in entity.ChildEntities)
+                _releaseRequests.Add(entityChild);
+
             _releaseRequests.Add(entity);
         }
 

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: LevelConfig
   m_EditorClassIdentifier: 
   _priceBomb: 5
-  _winAmount: 20
+  _winAmountGold: 20
+  _winAmountDiamod: 5
   _heroConfig: {fileID: 11400000, guid: d74f9d68bce9a584c8cb6212f135623d, type: 2}
   _stageConfigs:
   - {fileID: 11400000, guid: 605130387781d204a9ae84169297095c, type: 2}

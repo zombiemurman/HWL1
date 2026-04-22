@@ -29,7 +29,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
         private readonly GameplayPopupService _gameplayPopupService;
 
-        private readonly int _winAmount;
+        private readonly int _winAmountGold;
+        private readonly int _winAmountDiamond;
 
         public WinState(
             IInputService inputService,
@@ -41,6 +42,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             ICoroutinesPerformer coroutinesPerformer,
             WalletService walletService,
             int winAmount,
+            int winAmountDiamond,
             GameplayPopupService gameplayPopupService) : base(inputService)
         {
             _statistics = statistics;
@@ -50,7 +52,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             _sceneSwitcherService = sceneSwitcherService;
             _coroutinesPerformer = coroutinesPerformer;
             _walletService = walletService;
-            _winAmount = winAmount;
+            _winAmountGold = winAmount;
+            _winAmountDiamond = winAmountDiamond;
             _gameplayPopupService = gameplayPopupService;
         }
 
@@ -62,7 +65,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
             _statistics.UpdateWin();
 
-            _walletService.Add(CurrencyTypes.Gold, _winAmount);
+            _walletService.Add(CurrencyTypes.Gold, _winAmountGold);
+            _walletService.Add(CurrencyTypes.Diamond, _winAmountDiamond);
 
             _coroutinesPerformer.StartPerform(_statisticsDataProvider.SaveAsync());
             _coroutinesPerformer.StartPerform(_playerDataProvider.SaveAsync());

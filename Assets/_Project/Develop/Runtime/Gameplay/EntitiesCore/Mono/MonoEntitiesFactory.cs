@@ -60,6 +60,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono
 
         private void OnEntityReleased(Entity entity)
         {
+            if(_entityToMono.ContainsKey(entity) == false)
+                return;
+
             CleanupFor(entity);
 
             _entityToMono.Remove(entity);

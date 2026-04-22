@@ -61,7 +61,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
                 _container.Resolve<SceneSwitcherService>(),
                 _container.Resolve<ICoroutinesPerformer>(),
                 _container.Resolve<WalletService>(),
-                _container.Resolve<StageProviderService>().LevelConfig.WinAmount,
+                _container.Resolve<StageProviderService>().LevelConfig.WinAmountGold,
+                _container.Resolve<StageProviderService>().LevelConfig.WinAmountDiamond,
                 _container.Resolve<GameplayPopupService>());
         }
 

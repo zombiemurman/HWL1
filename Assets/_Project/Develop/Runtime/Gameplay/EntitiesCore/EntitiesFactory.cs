@@ -27,6 +27,7 @@ using Assets._Project.Develop.Runtime.Utilities;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
@@ -130,6 +131,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             Vector3 direction = (Vector3.zero - position).normalized;
 
             entity
+                .AddAbilityStorage()
                 .AddDebugText(new ReactiveVariable<string>("Catapult"))
                 .AddIsStopMoving()
                 .AddMovingToDistance(new ReactiveVariable<float>(catapultConfig.MovingToDistance))
@@ -186,14 +188,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddBodyContacDamage(new ReactiveVariable<float>(50))
                 .AddinAttackProcess(new ReactiveVariable<bool>(true))
                 .AddTakeDamageRequest()
-                .AddContactsDetectingMask(Layers.Enemy)
+                .AddContactsDetectingMask(Layers.EnemyMask)
                 .AddContactCollidersBuffer(new Buffer<Collider>(64))
                 .AddContactEntitiesBuffer(new Buffer<Entity>(64));
 
             entity
                 .AddSystem(new BodyContactsDetectingSystem())
                 .AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService))
-                .AddSystem(new DealDamageOnContactSystem());
+                .AddSystem(new PuddleDamageSystem());
 
             _entitiesLifeContext.Add(entity);
 
@@ -698,6 +700,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 
             ICompositCondition canStartAttack = new CompositeCondition()
                 .Add(new FuncCondition(() => entityParent.IsStopMoving.Value))
+                .Add(new FuncCondition(() => entityParent.IsDead.Value == false))
                 .Add(new FuncCondition(() => entity.InAttackCooldown.Value == false))
                 .Add(new FuncCondition(() => entity.inAttackProcess.Value == false));
 
@@ -723,6 +726,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             {
                 abilityStorage.Add(abilityTipes, entityAbility);
                 entity.AddChildEntity(entityAbility);
+            }
+            else
+            {
+                throw new ArgumentException("No AbilityStorage component");
             }
         }
 

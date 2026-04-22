@@ -16,3 +16,6 @@ MonoBehaviour:
   - <Type>k__BackingField: 0
     <Sprite>k__BackingField: {fileID: 21300000, guid: 42c6ef7a18cd9a747a825b2b785257ae,
       type: 3}
+  - <Type>k__BackingField: 1
+    <Sprite>k__BackingField: {fileID: 21300000, guid: 8857a60c11a88b14ca086d12bf8af83b,
+      type: 3}

@@ -10,7 +10,9 @@ namespace Assets._Project.Develop.Runtime.Configs.Gameplay.Levels
     {
         [SerializeField] private int _priceBomb;
 
-        [SerializeField] private int _winAmount;
+        [SerializeField] private int _winAmountGold;
+        
+        [SerializeField] private int _winAmountDiamod;
 
         [SerializeField] private HeroConfig _heroConfig;
 
@@ -22,6 +24,8 @@ namespace Assets._Project.Develop.Runtime.Configs.Gameplay.Levels
 
         public int PriceBomb => _priceBomb;
 
-        public int WinAmount => _winAmount;
+        public int WinAmountGold => _winAmountGold;
+
+        public int WinAmountDiamond => _winAmountDiamod;
     }
 }
