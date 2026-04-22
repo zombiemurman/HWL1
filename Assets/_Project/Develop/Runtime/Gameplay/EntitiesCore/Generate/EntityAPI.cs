@@ -1652,24 +1652,24 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 
 		public Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityStorage AbilityStorageC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityStorage>();
 
-		public System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTipes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity> AbilityStorage => AbilityStorageC.Value;
+		public System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTypes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity> AbilityStorage => AbilityStorageC.Value;
 
-		public bool TryGetAbilityStorage(out System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTipes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity> value)
+		public bool TryGetAbilityStorage(out System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTypes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity> value)
 		{
 			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityStorage component);
 			if(result)
 				value = component.Value;
 			else
-				value = default(System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTipes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity>);
+				value = default(System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTypes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity>);
 			return result;
 		}
 
 		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddAbilityStorage()
 		{
-			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityStorage() {Value = new System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTipes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity>() });
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityStorage() {Value = new System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTypes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity>() });
 		}
 
-		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddAbilityStorage(System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTipes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity> value)
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddAbilityStorage(System.Collections.Generic.Dictionary<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityTypes, Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity> value)
 		{
 			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityStorage() {Value = value});
 		}
@@ -1696,6 +1696,30 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
 		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddAbilityActive(Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.Boolean> value)
 		{
 			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.AbilityActive() {Value = value});
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.DebugText DebugTextC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.DebugText>();
+
+		public Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.String> DebugText => DebugTextC.Value;
+
+		public bool TryGetDebugText(out Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.String> value)
+		{
+			bool result = TryGetComponent(out Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.DebugText component);
+			if(result)
+				value = component.Value;
+			else
+				value = default(Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.String>);
+			return result;
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddDebugText()
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.DebugText() {Value = new Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.String>() });
+		}
+
+		public Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Entity AddDebugText(Assets._Project.Develop.Runtime.Utilities.Reactive.ReactiveVariable<System.String> value)
+		{
+			return AddComponent(new Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility.DebugText() {Value = value});
 		}
 
 		public Assets._Project.Develop.Runtime.Gameplay.Common.RigidbodyComponent RigidbodyC => GetComponent<Assets._Project.Develop.Runtime.Gameplay.Common.RigidbodyComponent>();

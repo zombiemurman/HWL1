@@ -61,12 +61,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
             AIStateMachine stateMachine = new AIStateMachine();
 
             ICompositCondition mineToExplosionState = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTipes.Turret].AbilityActive.Value == false))
-                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTipes.Explosion].AbilityActive.Value));
+                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTypes.Puddle].AbilityActive.Value == false))
+                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTypes.Explosion].AbilityActive.Value));
 
             ICompositCondition explosionToMineState = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTipes.Turret].AbilityActive.Value))
-                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTipes.Explosion].AbilityActive.Value == false));
+                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTypes.Puddle].AbilityActive.Value))
+                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTypes.Explosion].AbilityActive.Value == false));
 
             stateMachine.AddState(placeAMineState);
             stateMachine.AddState(explosionState);

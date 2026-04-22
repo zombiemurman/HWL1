@@ -19,7 +19,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
 
         public CreateExplosionByClickState(Entity entity, IInputService inputService)
         {
-            Entity explosionEntity = entity.AbilityStorage[AbilityTipes.Explosion];
+            Entity explosionEntity = entity.AbilityStorage[AbilityTypes.Explosion];
 
             _explosionPoint = explosionEntity.ExplosionPoint;
 

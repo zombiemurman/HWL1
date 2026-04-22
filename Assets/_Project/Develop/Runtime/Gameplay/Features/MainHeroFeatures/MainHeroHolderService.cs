@@ -1,14 +1,11 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures;
-using Assets._Project.Develop.Runtime.Gameplay.Features.Components;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MainHeroFeatures;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using System;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
 {
@@ -38,21 +35,28 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
         {
             AbilityActivityOff();
 
-            SetAbilityActiveOn(AbilityTipes.Mine);
+            SetAbilityActiveOn(AbilityTypes.Mine);
         }
 
         public void SetTurel()
         {
             AbilityActivityOff();
 
-            SetAbilityActiveOn(AbilityTipes.Turret);
+            SetAbilityActiveOn(AbilityTypes.Turret);
+        }
+
+        public void SetPuddle()
+        {
+            AbilityActivityOff();
+
+            SetAbilityActiveOn(AbilityTypes.Puddle);
         }
 
         public void SetExplosion()
         {
             AbilityActivityOff();
 
-            SetAbilityActiveOn(AbilityTipes.Explosion);
+            SetAbilityActiveOn(AbilityTypes.Explosion);
         }
 
         public void Dispose()
@@ -74,9 +78,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
 
         private void AbilityActivityOff()
         {
-            if (_mainHero.TryGetAbilityStorage(out Dictionary<AbilityTipes, Entity> abilityStorage))
+            if (_mainHero.TryGetAbilityStorage(out Dictionary<AbilityTypes, Entity> abilityStorage))
             {
-                foreach (KeyValuePair<AbilityTipes, Entity> item in abilityStorage)
+                foreach (KeyValuePair<AbilityTypes, Entity> item in abilityStorage)
                 {
                     if(item.Value.TryGetAbilityActive(out ReactiveVariable<bool> abilityActive))
                         abilityActive.Value = false;
@@ -84,9 +88,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
             }
         }
 
-        private void SetAbilityActiveOn(AbilityTipes abilityTipes)
+        private void SetAbilityActiveOn(AbilityTypes abilityTipes)
         {
-            if (_mainHero.TryGetAbilityStorage(out Dictionary<AbilityTipes, Entity> abilityStorage))
+            if (_mainHero.TryGetAbilityStorage(out Dictionary<AbilityTypes, Entity> abilityStorage))
             {
                 if(abilityStorage.ContainsKey(abilityTipes))
                     abilityStorage[abilityTipes].AbilityActive.Value = true;

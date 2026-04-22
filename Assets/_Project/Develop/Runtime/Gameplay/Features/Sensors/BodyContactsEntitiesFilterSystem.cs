@@ -14,6 +14,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Sensors
 
         private ReactiveVariable<bool> _inAttackProcess;
 
+        private ReactiveVariable<string> _debugText;
+
         private readonly CollidersRegistryService _collidersRegistryService;
 
         public BodyContactsEntitiesFilterSystem(CollidersRegistryService collidersRegistryService)
@@ -26,6 +28,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Sensors
             _contacts = entity.ContactCollidersBuffer;
             _contactEntities = entity.ContactEntitiesBuffer;
             _inAttackProcess = entity.inAttackProcess;
+            _debugText = entity.DebugText;
         }
 
         public void OnUpdate(float deltaTime)

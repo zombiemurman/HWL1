@@ -19,7 +19,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.ExpolosionFeatures
 
         protected override void OnEntityStartedWork(Entity entity)
         {
-            Entity explosionAbility = entity.AbilityStorage[AbilityTipes.Explosion];
+            Entity explosionAbility = entity.AbilityStorage[AbilityTypes.Explosion];
 
             _position = explosionAbility.ExplosionPoint;
 

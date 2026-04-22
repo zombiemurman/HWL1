@@ -6,11 +6,16 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.Enti
 {
     public class AbilityStorage : IEntityComponent
     {
-        public Dictionary<AbilityTipes, Entity> Value;
+        public Dictionary<AbilityTypes, Entity> Value;
     }
 
     public class AbilityActive : IEntityComponent
     {
         public ReactiveVariable<bool> Value;
+    }
+
+    public class DebugText : IEntityComponent
+    {
+        public ReactiveVariable<string> Value;
     }
 }

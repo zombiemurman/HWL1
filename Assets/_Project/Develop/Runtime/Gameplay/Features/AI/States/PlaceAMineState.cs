@@ -32,7 +32,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
             WalletService walletService, 
             int priceMine)
         {
-            Entity installMineAbility = entity.AbilityStorage[AbilityTipes.Turret];
+            Entity installMineAbility = entity.AbilityStorage[AbilityTypes.Puddle];
 
             _setMineRequest = installMineAbility.SetMineRequest;
             _abilityActive = installMineAbility.AbilityActive;

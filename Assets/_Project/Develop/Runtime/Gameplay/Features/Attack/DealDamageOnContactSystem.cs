@@ -13,12 +13,16 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.ContactTakeDamage
 
         private ReactiveVariable<float> _damage;
 
+        private ReactiveVariable<string> _debugText;
+
         private List<Entity> _processedEntities;
 
         public void OnInit(Entity entity)
         {
             _contacts = entity.ContactEntitiesBuffer;
             _damage = entity.BodyContacDamage;
+
+            _debugText = entity.DebugText;
 
             _processedEntities = new List<Entity>(_contacts.Items.Length);
         }

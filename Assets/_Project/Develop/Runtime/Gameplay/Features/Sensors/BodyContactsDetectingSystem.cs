@@ -10,6 +10,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Sensors
     {
         private ReactiveVariable<bool> _inAttackProcess;
 
+        private ReactiveVariable<string> _debugText;
+
         private Buffer<Collider> _contacts;
 
         private CapsuleCollider _body;
@@ -25,13 +27,16 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Sensors
             _mask = entity.ContactsDetectingMask;
             _transform = entity.EntityTransform;
             _body = entity.BodyCollider;
-            
+            _debugText = entity.DebugText;
         }
 
         public void OnUpdate(float deltaTime)
         {
             if (_inAttackProcess.Value == false)
                 return;
+
+            if (_debugText.Value == "Puddle")
+                Debug.Log("Puddle");
 
             Vector3 bottom = _transform.position + Vector3.up;
             Vector3 top = _transform.position - Vector3.up;

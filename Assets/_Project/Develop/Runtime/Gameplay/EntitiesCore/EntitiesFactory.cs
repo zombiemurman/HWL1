@@ -67,6 +67,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             Vector3 direction = (Vector3.zero - position).normalized;
 
             entity
+                .AddDebugText(new ReactiveVariable<string>("BaseEntity"))
                 .AddTeam(new ReactiveVariable<Teams>(Teams.Enemies))
                 .AddIsTouchAnotherTeam()
                 .AddIsTouchDeatMask()
@@ -129,6 +130,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             Vector3 direction = (Vector3.zero - position).normalized;
 
             entity
+                .AddDebugText(new ReactiveVariable<string>("Catapult"))
                 .AddIsStopMoving()
                 .AddMovingToDistance(new ReactiveVariable<float>(catapultConfig.MovingToDistance))
                 .AddTeam(new ReactiveVariable<Teams>(Teams.Enemies))
@@ -166,6 +168,34 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddSystem(new SelfRealeseSystem(_entitiesLifeContext));
 
             //_entitiesLifeContext.Add(entity);
+
+            return entity;
+        }
+
+        public Entity CreatePuddleEntity(Vector3 position)
+        {
+            Entity entity = CreateEmpty();
+
+            _monoEntitiesFactory.Create(entity, position, "Entities/PuddleEntity");
+
+            entity
+                .AddDebugText(new ReactiveVariable<string>("Puddle"))
+                .AddTeam(new ReactiveVariable<Teams>(Teams.MainHero))
+                .AddIsTouchAnotherTeam()
+                .AddIsTouchDeatMask()
+                .AddBodyContacDamage(new ReactiveVariable<float>(50))
+                .AddinAttackProcess(new ReactiveVariable<bool>(true))
+                .AddTakeDamageRequest()
+                .AddContactsDetectingMask(Layers.Enemy)
+                .AddContactCollidersBuffer(new Buffer<Collider>(64))
+                .AddContactEntitiesBuffer(new Buffer<Entity>(64));
+
+            entity
+                .AddSystem(new BodyContactsDetectingSystem())
+                .AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService))
+                .AddSystem(new DealDamageOnContactSystem());
+
+            _entitiesLifeContext.Add(entity);
 
             return entity;
         }
@@ -288,6 +318,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             _monoEntitiesFactory.Create(entity, position, "Entities/Projectile");
 
             entity
+                .AddDebugText(new ReactiveVariable<string>("Projectile"))
                 .AddMoveDirection(new ReactiveVariable<Vector3>(direction))
                 .AddMoveSpeed(new ReactiveVariable<float>(10))
                 .AddIsBullet(new ReactiveVariable<bool>(true))
@@ -339,7 +370,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
-
         public Entity CreateProjectileHero(Vector3 position, Vector3 direction, float damage)
         {
             Entity entity = CreateEmpty();
@@ -347,6 +377,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             _monoEntitiesFactory.Create(entity, position, "Entities/Projectile");
 
             entity
+                .AddDebugText(new ReactiveVariable<string>("ProjectileHero"))
                 .AddMoveDirection(new ReactiveVariable<Vector3>(direction))
                 .AddMoveSpeed(new ReactiveVariable<float>(10))
                 .AddIsBullet(new ReactiveVariable<bool>(true))
@@ -398,7 +429,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
-
         public Entity CreateHeroEntity(Vector3 position, HeroConfig heroConfig)
         {
             Entity entity = CreateEmpty();
@@ -406,6 +436,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             _monoEntitiesFactory.Create(entity, Vector3.zero, heroConfig.PrefabPath);
 
             entity
+                .AddDebugText(new ReactiveVariable<string>("Hero"))
                 .AddIsMainHero()
                 .AddTeam(new ReactiveVariable<Teams>(Teams.MainHero))
                 .AddMaxHealth(new ReactiveVariable<float>(heroConfig.MaxHealth))
@@ -443,6 +474,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             _monoEntitiesFactory.Create(entity, position, "Entities/TurelEntity");
 
             entity
+                .AddDebugText(new ReactiveVariable<string>("Turel"))
                 .AddStartAttackEvent()
                 .AddinAttackProcess()
                 .AddEndAttackEvent()
@@ -493,6 +525,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             _monoEntitiesFactory.Create(entity, position, "Entities/Bomb");
 
             entity
+                .AddDebugText(new ReactiveVariable<string>("Mine"))
                 .AddTeam(new ReactiveVariable<Teams>(Teams.MainHero))
                 .AddStartTimeBombEvent()
                 .AddEndAttackBombEvent()
@@ -536,6 +569,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             Entity entity = CreateEmpty();
 
             entity
+                .AddDebugText(new ReactiveVariable<string>("ExplosionAbility"))
                 .AddAbilityActive()
                 .AddExplosionCamera(Camera.main)
                 .AddStartAttackRequest()
@@ -618,11 +652,34 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
+        public Entity CreateInstallPuddleAbility()
+        {
+            Entity entity = CreateEmpty();
+
+            entity
+                .AddAbilityActive()
+                .AddSetMineRequest();
+
+            ICompositCondition canSetMine = new CompositeCondition()
+                .Add(new FuncCondition(() => entity.AbilityActive.Value));
+
+            entity
+                .AddCanSetMine(canSetMine);
+
+            entity
+                .AddSystem(new SetPuddleSystem(this));
+
+            _entitiesLifeContext.Add(entity);
+
+            return entity;
+        }
+
         public Entity CreateShootAbility(Entity entityParent, ShootAbilityConfig config)
         {
             Entity entity = CreateEmpty();
 
             entity
+                .AddDebugText(new ReactiveVariable<string>("ShootAbility"))
                 .AddShootPoint(entityParent.ShootPoint)
                 .AddAbilityActive(new ReactiveVariable<bool>(true))
                 .AddStartAttackRequest()
@@ -660,9 +717,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
-        public void AddAbility(Entity entity, AbilityTipes abilityTipes, Entity entityAbility)
+        public void AddAbility(Entity entity, AbilityTypes abilityTipes, Entity entityAbility)
         {
-            if (entity.TryGetAbilityStorage(out Dictionary<AbilityTipes, Entity> abilityStorage))
+            if (entity.TryGetAbilityStorage(out Dictionary<AbilityTypes, Entity> abilityStorage))
             {
                 abilityStorage.Add(abilityTipes, entityAbility);
                 entity.AddChildEntity(entityAbility);

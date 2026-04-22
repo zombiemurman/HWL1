@@ -42,7 +42,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Enemies
 
                 case CatapultConfig catapultConfig:
                     entity = _entitiesFactory.CreateCatapultEntity(position, catapultConfig);
-                    _entitiesFactory.AddAbility(entity, AbilityTipes.Shoot, _entitiesFactory.CreateShootAbility(entity, catapultConfig.ShootAbilityConfig));
+                    _entitiesFactory.AddAbility(entity, AbilityTypes.Shoot, _entitiesFactory.CreateShootAbility(entity, catapultConfig.ShootAbilityConfig));
                     break;
 
                 default:

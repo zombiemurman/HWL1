@@ -17,7 +17,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
         {
             base.Enter();
 
-            _mainHeroHolderService.SetTurel();
+            _mainHeroHolderService.SetPuddle();
         }
 
         public override void Exit()

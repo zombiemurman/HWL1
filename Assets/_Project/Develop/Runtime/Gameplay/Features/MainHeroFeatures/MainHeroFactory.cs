@@ -47,9 +47,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
 
             Entity entity = _entitiesFactory.CreateHeroEntity(position, config);
 
-            _entitiesFactory.AddAbility(entity, AbilityTipes.Explosion, _entitiesFactory.CreateExplosionAbility());
-            _entitiesFactory.AddAbility(entity, AbilityTipes.Mine, _entitiesFactory.CreateInstallMineAbility());
-            _entitiesFactory.AddAbility(entity, AbilityTipes.Turret, _entitiesFactory.CreateInstallTurelAbility());
+            _entitiesFactory.AddAbility(entity, AbilityTypes.Explosion, _entitiesFactory.CreateExplosionAbility());
+            _entitiesFactory.AddAbility(entity, AbilityTypes.Mine, _entitiesFactory.CreateInstallMineAbility());
+            _entitiesFactory.AddAbility(entity, AbilityTypes.Turret, _entitiesFactory.CreateInstallTurelAbility());
+            _entitiesFactory.AddAbility(entity, AbilityTypes.Puddle, _entitiesFactory.CreateInstallPuddleAbility());
 
             _entitiesLifeContext.Add(entity);
 
