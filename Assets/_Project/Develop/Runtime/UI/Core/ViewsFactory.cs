@@ -20,6 +20,8 @@ namespace Assets._Project.Develop.Runtime.UI.Core
             {ViewIDs.TextPopup,  "UI/Popups/TextPopup"},
             {ViewIDs.WinPopup, "UI/Gameplay/ResultPopup/WinPopup" },
             {ViewIDs.DefeatPopup, "UI/Gameplay/ResultPopup/DefeatPopup" },
+            {ViewIDs.SelectAbillityView, "UI/Gameplay/Ability/SelectAbilityView" },
+            {ViewIDs.AbilityPopupView, "UI/Gameplay/Ability/AbilitySelectPopup" },
         };
 
         public ViewsFactory(ResourcesAssetsLoader resourcesAssetsLoader)

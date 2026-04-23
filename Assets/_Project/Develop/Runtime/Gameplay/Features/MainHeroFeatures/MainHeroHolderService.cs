@@ -59,6 +59,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
             SetAbilityActiveOn(AbilityTypes.Explosion);
         }
 
+        public void SetAbilityBy(AbilityTypes abilityTypes)
+        {
+            AbilityActivityOff();
+
+            SetAbilityActiveOn(abilityTypes);
+        }
+
         public void Dispose()
         {
             _entitiesLifeContext.Added -= OnEntityAdded;

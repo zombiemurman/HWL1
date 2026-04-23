@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.UI.Core;
+﻿using Assets._Project.Develop.Runtime.UI.Ability;
+using Assets._Project.Develop.Runtime.UI.Core;
 using Assets._Project.Develop.Runtime.UI.Gameplay.ResultsPopups;
 using Assets._Project.Develop.Runtime.UI.MainMenu;
 using System;
@@ -40,6 +41,17 @@ namespace Assets._Project.Develop.Runtime.UI.Gameplay
             DefeatPopupView view = ViewsFactory.Create<DefeatPopupView>(ViewIDs.DefeatPopup, PopupLayer);
 
             DefeatPopupPresenter popup = _gameplayPresentersFactory.CreateDefeatPopupPresenter(view);
+
+            OnPopupCreated(popup, view, closedCallback);
+
+            return popup;
+        }
+
+        public AbilityPopupPresenter OpenAbilityPopup(Action closedCallback = null)
+        {
+            AbilityPopupView view = ViewsFactory.Create<AbilityPopupView>(ViewIDs.AbilityPopupView, PopupLayer);
+
+            AbilityPopupPresenter popup = _gameplayPresentersFactory.CreateAbilityPopupPresenter(view);
 
             OnPopupCreated(popup, view, closedCallback);
 
