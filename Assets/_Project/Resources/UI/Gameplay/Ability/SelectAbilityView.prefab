@@ -55,7 +55,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa1a464469183ff4bb46f9fd16c978fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _active: {r: 0.9622642, g: 0.61551523, b: 0.031772893, a: 1}
+  _noActive: {r: 0.2028302, g: 0.4501668, b: 1, a: 1}
   _abilityIcon: {fileID: 6759051187003958258}
+  _backgroud: {fileID: 5706763396169027772}
   _descriptionText: {fileID: 3477329449824627845}
   _currencyIcon: {fileID: 8627915737046162471}
   _currencyAmountText: {fileID: 5187053931379864369}

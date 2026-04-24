@@ -10,7 +10,12 @@ namespace Assets._Project.Develop.Runtime.UI.Ability
     {
         public event Action Click;
 
+        [SerializeField] private Color _active;
+        [SerializeField] private Color _noActive;
+
         [SerializeField] private Image _abilityIcon;
+        
+        [SerializeField] private Image _backgroud;
 
         [SerializeField] private TMP_Text _descriptionText;
 
@@ -34,6 +39,9 @@ namespace Assets._Project.Develop.Runtime.UI.Ability
         public void SetPrice(int price) => _currencyAmountText.text = price.ToString();
         public void SetAbilityIcon(Sprite icon) => _abilityIcon.sprite = icon;
         public void SetCurrencyIcon(Sprite icon) => _currencyIcon.sprite = icon;
+
+        public void SetActive() => _backgroud.color = _active;
+        public void SetNoActive() => _backgroud.color = _noActive;
 
         private void OnClicked()
         {

@@ -1,13 +1,16 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
 using Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
+using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
 using Assets._Project.Develop.Runtime.Gameplay.Features.StageFeatures;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
+using Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using Assets._Project.Develop.Runtime.Utilities.StateMachineCore;
 using Assets._Project.Develop.Runtime.Utilities.Timer;
@@ -52,20 +55,18 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI
 
             CreateExplosionByClickState explosionState = new CreateExplosionByClickState(entity, mouseInput);
 
-            PlaceAMineState placeAMineState = new PlaceAMineState(
-                entity, 
+            AbilityIdleState placeAMineState = new AbilityIdleState(
+                _container.Resolve<MainHeroHolderService>(),
                 mouseInput,
                 _container.Resolve<WalletService>(),
-                _container.Resolve<StageProviderService>().LevelConfig.PriceBomb);
+                _container.Resolve<ConfigsProviderService>().GetConfig<AbilitiesConfigsContainer>());
 
             AIStateMachine stateMachine = new AIStateMachine();
 
             ICompositCondition mineToExplosionState = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTypes.Puddle].AbilityActive.Value == false))
                 .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTypes.Explosion].AbilityActive.Value));
 
             ICompositCondition explosionToMineState = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTypes.Puddle].AbilityActive.Value))
                 .Add(new FuncCondition(() => entity.AbilityStorage[AbilityTypes.Explosion].AbilityActive.Value == false));
 
             stateMachine.AddState(placeAMineState);

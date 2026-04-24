@@ -83,11 +83,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
             StageProviderService stageProviderService = _container.Resolve<StageProviderService>();
 
+            TimerService idleTimer = _timerServiceFactory.Create(10f);
+
             IdleState idleState = new IdleState(
                 _container.Resolve<MainHeroHolderService>(),
-                _container.Resolve<GameplayPopupService>());
+                _container.Resolve<GameplayPopupService>(),
+                idleTimer);
 
-            TimerService idleTimer = _timerServiceFactory.Create(3f);
             disposables.Add(idleTimer);
             disposables.Add(idleState.Entered.Subscribe(idleTimer.Restart));
 

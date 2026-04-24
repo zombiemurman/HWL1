@@ -8,6 +8,8 @@ namespace Assets._Project.Develop.Runtime.UI.Ability
 {
     public class SelectAbilityPresenter : IPresenter
     {
+        public event Action<SelectAbilityPresenter> Selected;
+
         private readonly MainHeroHolderService _mainHeroHolderService;
         private readonly CurrencyIconsConfig _currencyIconsConfig;
 
@@ -34,6 +36,8 @@ namespace Assets._Project.Develop.Runtime.UI.Ability
             View.SetPrice(AbilityConfig.Amount);
             View.SetCurrencyIcon(_currencyIconsConfig.GetSpriteFor(AbilityConfig.Currency));
 
+            View.SetNoActive();
+
             View.Click += OnViewClicked;
         }
 
@@ -45,6 +49,8 @@ namespace Assets._Project.Develop.Runtime.UI.Ability
         private void OnViewClicked()
         {
             _mainHeroHolderService.SetAbilityBy(AbilityConfig.Ability);
+
+            Selected?.Invoke(this);
         }
 
     }

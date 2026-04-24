@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
 {
-    //туду: Подключить кошелек
+
     public class PlaceAMineState : State, IUpdatableState
     {
         private readonly WalletService _walletService; 

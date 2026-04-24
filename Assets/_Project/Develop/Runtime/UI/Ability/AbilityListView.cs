@@ -4,5 +4,12 @@ namespace Assets._Project.Develop.Runtime.UI.Ability
 {
     public class AbilityListView : ElementsListView<SelectAbillityView>
     {
+        public void Select(SelectAbillityView selectAbillityView)
+        {
+            foreach (SelectAbillityView view in Elements)
+                view.SetNoActive();
+
+            selectAbillityView.SetActive();
+        }
     }
 }

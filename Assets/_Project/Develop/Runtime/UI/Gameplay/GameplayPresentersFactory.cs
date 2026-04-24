@@ -11,6 +11,7 @@ using Assets._Project.Develop.Runtime.UI.Gameplay.ResultsPopups;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
+using Assets._Project.Develop.Runtime.Utilities.Timer;
 using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.UI.Gameplay
@@ -76,13 +77,14 @@ namespace Assets._Project.Develop.Runtime.UI.Gameplay
                _container.Resolve<ConfigsProviderService>().GetConfig<CurrencyIconsConfig>());
         }
 
-        public AbilityPopupPresenter CreateAbilityPopupPresenter(AbilityPopupView view)
+        public AbilityPopupPresenter CreateAbilityPopupPresenter(AbilityPopupView view, TimerService idleTimer)
         {
             return new AbilityPopupPresenter(
                 view,
                 _container.Resolve<ConfigsProviderService>().GetConfig<AbilitiesConfigsContainer>(),
                 this,
-                _container.Resolve<ViewsFactory>());
+                _container.Resolve<ViewsFactory>(),
+                idleTimer);
         }
     }
 }

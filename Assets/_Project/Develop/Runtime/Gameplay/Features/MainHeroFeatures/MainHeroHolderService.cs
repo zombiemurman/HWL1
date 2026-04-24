@@ -11,6 +11,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
 {
     public class MainHeroHolderService : IInitializable, IDisposable
     {
+        public event Action<AbilityTypes,Entity> CurrentAbilityActive;
+
         private ReactiveEvent<Entity> _heroRegistred = new();
 
         private EntitiesLifeContext _entitiesLifeContext;
@@ -100,7 +102,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
             if (_mainHero.TryGetAbilityStorage(out Dictionary<AbilityTypes, Entity> abilityStorage))
             {
                 if(abilityStorage.ContainsKey(abilityTipes))
+                {
                     abilityStorage[abilityTipes].AbilityActive.Value = true;
+                    
+                    CurrentAbilityActive?.Invoke(abilityTipes, abilityStorage[abilityTipes]);
+                }
+                    
             }
         }
 

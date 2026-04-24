@@ -2,6 +2,7 @@
 using Assets._Project.Develop.Runtime.UI.Core;
 using Assets._Project.Develop.Runtime.UI.Gameplay.ResultsPopups;
 using Assets._Project.Develop.Runtime.UI.MainMenu;
+using Assets._Project.Develop.Runtime.Utilities.Timer;
 using System;
 using UnityEngine;
 
@@ -47,11 +48,11 @@ namespace Assets._Project.Develop.Runtime.UI.Gameplay
             return popup;
         }
 
-        public AbilityPopupPresenter OpenAbilityPopup(Action closedCallback = null)
+        public AbilityPopupPresenter OpenAbilityPopup(TimerService idleTimer, Action closedCallback = null)
         {
             AbilityPopupView view = ViewsFactory.Create<AbilityPopupView>(ViewIDs.AbilityPopupView, PopupLayer);
 
-            AbilityPopupPresenter popup = _gameplayPresentersFactory.CreateAbilityPopupPresenter(view);
+            AbilityPopupPresenter popup = _gameplayPresentersFactory.CreateAbilityPopupPresenter(view, idleTimer);
 
             OnPopupCreated(popup, view, closedCallback);
 
