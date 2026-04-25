@@ -24,6 +24,7 @@ namespace Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders
            return new PlayerData()
            {
                WalletData = InitWalletData(),
+               AbilitiesPermanentsID = InitialAbilitiesPermanents(),
            };
         }
 
@@ -37,6 +38,13 @@ namespace Assets._Project.Develop.Runtime.Utilities.DataManagment.DataProviders
                 walletData[currencyTypes] = walletConfig.GetValueFor(currencyTypes);
 
             return walletData;
+        }
+
+        private List<string> InitialAbilitiesPermanents()
+        {
+            List<string> AbilitiesID = new();
+
+            return AbilitiesID;
         }
     }
 }

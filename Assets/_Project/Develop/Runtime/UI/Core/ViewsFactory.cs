@@ -22,6 +22,8 @@ namespace Assets._Project.Develop.Runtime.UI.Core
             {ViewIDs.DefeatPopup, "UI/Gameplay/ResultPopup/DefeatPopup" },
             {ViewIDs.SelectAbillityView, "UI/Gameplay/Ability/SelectAbilityView" },
             {ViewIDs.AbilityPopupView, "UI/Gameplay/Ability/AbilitySelectPopup" },
+            {ViewIDs.BuyAbilityView, "UI/Gameplay/AbilityShop/BuyAbilityView" },
+            {ViewIDs.AbilityPermanentShopView, "UI/Gameplay/AbilityShop/AbilityPermanentShopPopupView" },
         };
 
         public ViewsFactory(ResourcesAssetsLoader resourcesAssetsLoader)

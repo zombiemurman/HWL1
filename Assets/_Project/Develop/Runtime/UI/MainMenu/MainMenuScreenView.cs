@@ -12,6 +12,8 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
         
         public event Action StartGameButtonClicked;
 
+        public event Action AbilityShopButtonClicked;
+
         [field: SerializeField] public IconTextListView WalletView { get; private set; }
         [field: SerializeField] public TextTextListView StatisticsView { get; private set; }
 
@@ -19,11 +21,15 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
         
         [SerializeField] private Button _startGameButton;
 
+        [SerializeField] private Button _abilityShopButton;
+
         private void OnEnable()
         {
             _resetStatisticButton.onClick.AddListener(OnResetStatisticButtonClicked);
 
             _startGameButton.onClick.AddListener(OnStartGameButtonClicked);
+
+            _abilityShopButton.onClick.AddListener(OnAbilityShopCliked);
         }
 
         private void OnDisable()
@@ -31,6 +37,8 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
             _resetStatisticButton.onClick.RemoveListener(OnResetStatisticButtonClicked);
 
             _startGameButton.onClick.RemoveListener(OnStartGameButtonClicked);
+
+            _abilityShopButton.onClick.RemoveListener(OnAbilityShopCliked);
         }
 
         private void OnStartGameButtonClicked()
@@ -41,6 +49,11 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
         private void OnResetStatisticButtonClicked()
         {
             ResetStatisticButtonClicked?.Invoke();
+        }
+
+        private void OnAbilityShopCliked()
+        {
+            AbilityShopButtonClicked?.Invoke();
         }
     }
 }

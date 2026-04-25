@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.Infrastructure.DI;
+﻿using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityPermanent;
+using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.Meta.features.Statistic;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
 using Assets._Project.Develop.Runtime.UI;
@@ -47,12 +48,19 @@ namespace Assets._Project.Develop.Runtime.Infrastructure.EntryPoint
             container.RegisterAsSingle(CreateStatistics).NonLazy();
 
             container.RegisterAsSingle(CreateWalletService).NonLazy();
+            
+            container.RegisterAsSingle(CreateAbilityPermanentProviderService).NonLazy();
 
             container.RegisterAsSingle(CreateProjectPresentersFactory);
 
             container.RegisterAsSingle(CreateViewsFactory);
             
             container.RegisterAsSingle(CreateTimerServiceFactory);
+        }
+
+        private static AbilityPermanentProviderService CreateAbilityPermanentProviderService(DIContainer container)
+        {
+            return new AbilityPermanentProviderService(container.Resolve<PlayerDataProvider>());
         }
 
         private static TimerServiceFactory CreateTimerServiceFactory(DIContainer container)

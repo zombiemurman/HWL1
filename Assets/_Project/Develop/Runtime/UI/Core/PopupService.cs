@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.UI.Core.TestPopup;
+﻿using Assets._Project.Develop.Runtime.UI.AbilityShop;
+using Assets._Project.Develop.Runtime.UI.Core.TestPopup;
 using Assets._Project.Develop.Runtime.UI.Core.TextPopup;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,8 @@ namespace Assets._Project.Develop.Runtime.UI.Core
             ViewsFactory = viewsFactory;
             _presentersFactory = presentersFactory;
         }
+
+        public ProjectPresentersFactory PresentersFactory => _presentersFactory;
 
         protected abstract Transform PopupLayer { get; }
 

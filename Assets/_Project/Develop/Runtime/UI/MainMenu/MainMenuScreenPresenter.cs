@@ -48,6 +48,8 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
 
             _mainMenuScreenView.StartGameButtonClicked += OnStartGameButtonClicked;
 
+            _mainMenuScreenView.AbilityShopButtonClicked += OnAbilityShopButtonCliked;
+
             _statisticsHandler.EnoughtNo += OnEnoughtNo;
 
             CreateWallet();
@@ -62,6 +64,8 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
             _mainMenuScreenView.ResetStatisticButtonClicked -= OnResetStatisticButtonClicked;
 
             _mainMenuScreenView.StartGameButtonClicked -= OnStartGameButtonClicked;
+
+            _mainMenuScreenView.AbilityShopButtonClicked -= OnAbilityShopButtonCliked;
 
             _statisticsHandler.EnoughtNo -= OnEnoughtNo;
 
@@ -93,6 +97,11 @@ namespace Assets._Project.Develop.Runtime.UI.MainMenu
         private void OnStartGameButtonClicked()
         {
             _coroutinesPerformer.StartPerform(_sceneSwitcherService.ProcessSwitchTo(Scenes.Gameplay, new GameplayInputArgs(1)));
+        }
+
+        private void OnAbilityShopButtonCliked()
+        {
+            _menuPopupService.OpenShopPopup();
         }
 
         private void OnEnoughtNo()

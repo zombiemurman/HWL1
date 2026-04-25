@@ -1,4 +1,5 @@
 using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
+using Assets._Project.Develop.Runtime.Configs.Gameplay.AbilityPermanent;
 using Assets._Project.Develop.Runtime.Configs.Gameplay.Levels;
 using Assets._Project.Develop.Runtime.Configs.Meta;
 using Assets._Project.Develop.Runtime.Configs.Meta.Wallet;
@@ -25,6 +26,7 @@ namespace Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet
             {typeof(CharacterControllerMovementConfig), "Configs/GamePlay/CharacterControllerMovementConfig" },
             {typeof(LevelsListConfig), "Configs/Gameplay/Levels/LevelsListConfig" },
             {typeof(AbilitiesConfigsContainer), "Configs/GamePlay/Ability/AbilitiesConfigsContainer" },
+            {typeof(AbilityPermanentConfigsContainer), "Configs/GamePlay/AbilityPermanent/AbilityPermanentConfigsContainer" },
         };
 
         public ResourcesConfigsLoader(ResourcesAssetsLoader resources)

@@ -1,6 +1,10 @@
 {
   "WalletData": {
-    "Gold": 140,
-    "Diamond": 65
-  }
+    "Gold": 15,
+    "Diamond": 30
+  },
+  "AbilitiesPermanentsID": [
+    "HealthHeroPercent",
+    "IncreaseExplosionDamage"
+  ]
 }

@@ -6,6 +6,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.StageFeatures
 {
     public class StageProviderService : IDisposable
     {
+        public event Action NextStage;
+
         private ReactiveVariable<int> _currentStageNumber = new();
         private ReactiveVariable<StageResults> _currentStageResult = new();
 
@@ -53,6 +55,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.StageFeatures
             _stageEndedDisposable = _currentStage.Completed.Subscribe(OnStageComplited);
 
             _currentStage.Start();
+
+            NextStage?.Invoke();
         }
 
         public void UpdateCurrent(float deltaTime) => _currentStage.Update(deltaTime);

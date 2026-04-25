@@ -23,7 +23,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature
                 {
                     Camera camera = Camera.main;
 
-                    if (IsPointerOverUI()) 
+                    if (IsPointerOverUI())
                         return Vector3.zero;
 
                     Ray ray = camera.ScreenPointToRay(Input.mousePosition);
@@ -45,6 +45,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature
 
             var results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventData, results);
+
+
 
             return results.Count > 0;
         }

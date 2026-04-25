@@ -12,6 +12,7 @@
         public const string DefeatPopup = nameof(DefeatPopup);
         public const string SelectAbillityView = nameof(SelectAbillityView);
         public const string AbilityPopupView = nameof(AbilityPopupView);
-
+        public const string BuyAbilityView = nameof(BuyAbilityView);
+        public const string AbilityPermanentShopView = nameof(AbilityPermanentShopView);
     }
 }
