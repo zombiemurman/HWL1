@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
+﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
+using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Gameplay.Infrastructure;
 using Assets._Project.Develop.Runtime.Meta.features.Statistic;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
@@ -29,6 +30,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
         private readonly GameplayPopupService _gameplayPopupService;
 
+        private readonly EntitiesLifeContext _entitiesLifeContext;
+
         private readonly int _winAmountGold;
         private readonly int _winAmountDiamond;
 
@@ -43,7 +46,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             WalletService walletService,
             int winAmount,
             int winAmountDiamond,
-            GameplayPopupService gameplayPopupService) : base(inputService)
+            GameplayPopupService gameplayPopupService,
+            EntitiesLifeContext entitiesLifeContext) : base(inputService)
         {
             _statistics = statistics;
             _statisticsDataProvider = statisticsDataProvider;
@@ -55,6 +59,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             _winAmountGold = winAmount;
             _winAmountDiamond = winAmountDiamond;
             _gameplayPopupService = gameplayPopupService;
+            _entitiesLifeContext = entitiesLifeContext;
         }
 
         public override void Enter()
@@ -62,6 +67,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
             base.Enter();
 
             Debug.Log("WIN WIN WIN");
+
+            _entitiesLifeContext.ReleaseAll();
 
             _statistics.UpdateWin();
 

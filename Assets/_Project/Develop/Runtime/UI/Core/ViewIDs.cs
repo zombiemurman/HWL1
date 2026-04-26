@@ -14,5 +14,8 @@
         public const string AbilityPopupView = nameof(AbilityPopupView);
         public const string BuyAbilityView = nameof(BuyAbilityView);
         public const string AbilityPermanentShopView = nameof(AbilityPermanentShopView);
+        public const string MainHeroHealthBar = nameof(MainHeroHealthBar);
+        public const string SimpleHealthBar = nameof(SimpleHealthBar);
+        public const string AbilityIcon = nameof(AbilityIcon);
     }
 }

@@ -31,7 +31,9 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
         public override void Enter()
         {
             base.Enter();
-            
+
+            _mainHeroHolderService.AbilityActivityOff();
+
             _popup = _popupService.OpenAbilityPopup(_idleTimer);
         }
 

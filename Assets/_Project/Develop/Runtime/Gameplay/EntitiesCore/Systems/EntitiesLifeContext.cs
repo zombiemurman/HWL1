@@ -49,6 +49,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems
             _releaseRequests.Add(entity);
         }
 
+        public void ReleaseAll()
+        {
+            foreach(Entity entity in _entities)
+                Release(entity);
+        }
+
         public void Dispose()
         {
             foreach (Entity entity in _entities)          

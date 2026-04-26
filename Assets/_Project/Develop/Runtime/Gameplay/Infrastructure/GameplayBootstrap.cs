@@ -4,6 +4,7 @@ using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
 using Assets._Project.Develop.Runtime.Gameplay.States;
 using Assets._Project.Develop.Runtime.Infrastructure;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
+using Assets._Project.Develop.Runtime.UI.Gameplay;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
 using System;
@@ -23,6 +24,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
         private AIBrainsContext _brainsContext;
 
         private GameplayStatesContext _gameplayStatesContext;
+
+        private GameplayScreenPresenter _gameplayScreenPresenter;
 
         public override void ProcessRegistrations(DIContainer container, IInputSceneArgs sceneArgs = null)
         {
@@ -46,6 +49,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
             _container.Resolve<MainHeroFactory>().Create(Vector3.zero, _inputArgs.LevelNumber);
 
+            _gameplayScreenPresenter = _container.Resolve<GameplayScreenPresenter>();
+
             yield break;
         }
 
@@ -64,8 +69,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
 
         }
 
+        private void LateUpdate()
+        {
+            _gameplayScreenPresenter?.LateUpdate();
+        }
+
         private void OnDestroy()
         {
+            _gameplayScreenPresenter.Dispose();
             _entitiesLifeContext.Dispose();
         }
     }

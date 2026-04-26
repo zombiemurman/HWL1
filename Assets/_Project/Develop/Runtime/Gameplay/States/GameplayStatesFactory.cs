@@ -1,4 +1,5 @@
 ﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
 using Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
@@ -63,7 +64,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
                 _container.Resolve<WalletService>(),
                 _container.Resolve<StageProviderService>().LevelConfig.WinAmountGold,
                 _container.Resolve<StageProviderService>().LevelConfig.WinAmountDiamond,
-                _container.Resolve<GameplayPopupService>());
+                _container.Resolve<GameplayPopupService>(),
+                _container.Resolve<EntitiesLifeContext>());
         }
 
         public DefeatState CreateDefeatState()
@@ -83,7 +85,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
             StageProviderService stageProviderService = _container.Resolve<StageProviderService>();
 
-            TimerService idleTimer = _timerServiceFactory.Create(10f);
+            TimerService idleTimer = _timerServiceFactory.Create(3f);
 
             IdleState idleState = new IdleState(
                 _container.Resolve<MainHeroHolderService>(),

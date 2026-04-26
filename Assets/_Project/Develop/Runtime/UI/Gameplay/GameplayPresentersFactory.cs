@@ -1,13 +1,19 @@
 ﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
+using Assets._Project.Develop.Runtime.Configs.Gameplay.AbilityPermanent;
 using Assets._Project.Develop.Runtime.Configs.Meta.Wallet;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityPermanent;
 using Assets._Project.Develop.Runtime.Gameplay.Features.MainHero;
 using Assets._Project.Develop.Runtime.Gameplay.Game;
 using Assets._Project.Develop.Runtime.Gameplay.Infrastructure;
 using Assets._Project.Develop.Runtime.Infrastructure.DI;
 using Assets._Project.Develop.Runtime.UI.Ability;
+using Assets._Project.Develop.Runtime.UI.AbilityShop;
 using Assets._Project.Develop.Runtime.UI.Core;
 using Assets._Project.Develop.Runtime.UI.Gameplay.GameplayRandomSymbol;
 using Assets._Project.Develop.Runtime.UI.Gameplay.ResultsPopups;
+using Assets._Project.Develop.Runtime.UI.HPBar;
 using Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet;
 using Assets._Project.Develop.Runtime.Utilities.CoroutinesManagment;
 using Assets._Project.Develop.Runtime.Utilities.SceneManagment;
@@ -27,9 +33,35 @@ namespace Assets._Project.Develop.Runtime.UI.Gameplay
             _gameplayInputArgs = gameplayInputArgs;
         }
 
+        public AbilityPermanentDisplayPresenter CreateAbilityPermanentDisplayPresenter(IconListView iconListView)
+        {
+            return new AbilityPermanentDisplayPresenter(
+                iconListView,
+                 _container.Resolve<ViewsFactory>(),
+                 _container.Resolve<ConfigsProviderService>().GetConfig<AbilityPermanentConfigsContainer>(),
+                 _container.Resolve<AbilityPermanentProviderService>());
+        }
+
+        public EntityHealthPresenter CreateEntityHealthPresenter(Entity entity, BarWithText view)
+        {
+            return new EntityHealthPresenter(view, entity);
+        }
+
+        public EntitiesHealthDisplayPresenter CreateEntitiesHealthDisplayPresenter(EntitiesHealthDisplay view)
+        {
+            return new EntitiesHealthDisplayPresenter(
+                _container.Resolve<EntitiesLifeContext>(),
+                view,
+                _container.Resolve<ViewsFactory>(),
+                this);
+        }
+
         public GameplayScreenPresenter CreateGameplayScreenPresenter(GameplayScreenView gameplayScreenView)
         {
-            return new GameplayScreenPresenter(gameplayScreenView, _container.Resolve<ProjectPresentersFactory>());
+            return new GameplayScreenPresenter(
+                gameplayScreenView, 
+                _container.Resolve<ProjectPresentersFactory>(),
+                _container.Resolve<GameplayPresentersFactory>());
         }
 
         public GameplayRandomSymbolPresenter CreateGameplayRandomSymbolPresenter(GameplayRandomSymbolView view)

@@ -53,10 +53,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.States
 
         public void Update(float deltaTime)
         {
-            //if (Input.GetKeyDown(KeyCode.Q))
-            //{
-            //    _coroutinesPerformer.StartPerform(_sceneSwitcherService.ProcessSwitchTo(Scenes.MainMenu));
-            //}
         }
     }
 }

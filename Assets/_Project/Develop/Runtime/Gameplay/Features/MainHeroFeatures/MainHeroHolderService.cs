@@ -68,6 +68,18 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
             SetAbilityActiveOn(abilityTypes);
         }
 
+        public void AbilityActivityOff()
+        {
+            if (_mainHero.TryGetAbilityStorage(out Dictionary<AbilityTypes, Entity> abilityStorage))
+            {
+                foreach (KeyValuePair<AbilityTypes, Entity> item in abilityStorage)
+                {
+                    if (item.Value.TryGetAbilityActive(out ReactiveVariable<bool> abilityActive))
+                        abilityActive.Value = false;
+                }
+            }
+        }
+
         public void Dispose()
         {
             _entitiesLifeContext.Added -= OnEntityAdded;
@@ -82,18 +94,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
                 _mainHero = entity;
 
                 _heroRegistred?.Invoke(entity);
-            }
-        }
-
-        private void AbilityActivityOff()
-        {
-            if (_mainHero.TryGetAbilityStorage(out Dictionary<AbilityTypes, Entity> abilityStorage))
-            {
-                foreach (KeyValuePair<AbilityTypes, Entity> item in abilityStorage)
-                {
-                    if(item.Value.TryGetAbilityActive(out ReactiveVariable<bool> abilityActive))
-                        abilityActive.Value = false;
-                }
             }
         }
 
