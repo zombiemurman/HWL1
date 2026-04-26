@@ -1,4 +1,6 @@
 ﻿
+using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Configs.Gameplay.Entities
@@ -11,5 +13,7 @@ namespace Assets._Project.Develop.Runtime.Configs.Gameplay.Entities
         [field: SerializeField, Min(0)] public float ExplosionRadius { get; private set; } = 2;
         [field: SerializeField, Min(0)] public float ExplosionDamage { get; private set; } = 120;
         [field: SerializeField, Min(0)] public float AttackCooldownInitialTime { get; private set; } = 2f;
+
+        [field: SerializeField] public AbilitiesConfigsContainer Ability { get; private set; }
     }
 }

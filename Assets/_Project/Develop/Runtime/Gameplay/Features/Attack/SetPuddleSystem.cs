@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
@@ -18,10 +19,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
 
         private IDisposable _setMineRequestDisposable;
 
+        private readonly PuddleAbilityConfig _config;
+
         public SetPuddleSystem(
-            EntitiesFactory entitiesFactory)
+            EntitiesFactory entitiesFactory, PuddleAbilityConfig config)
         {
             _entitiesFactory = entitiesFactory;
+            _config = config;
         }
 
         public void OnInit(Entity entity)
@@ -41,7 +45,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
         {
             if (_canSetMine.Evaluate())
             {
-                Entity entity = _entitiesFactory.CreatePuddleEntity(positionMine);
+                Entity entity = _entitiesFactory.CreatePuddleEntity(positionMine, _config);
             }
                 
         }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
+using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Configs.Gameplay.Entities
 {
@@ -11,6 +12,6 @@ namespace Assets._Project.Develop.Runtime.Configs.Gameplay.Entities
         [field: SerializeField, Min(0)] public float MaxHealth { get; private set; } = 100;
         [field: SerializeField, Min(0)] public float MovingToDistance { get; private set; } = 100;
         [field: SerializeField] public ShootAbilityConfig ShootAbilityConfig { get; private set; }
-        
+
     }
 }

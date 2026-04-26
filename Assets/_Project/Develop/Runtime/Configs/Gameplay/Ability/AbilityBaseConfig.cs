@@ -4,15 +4,14 @@ using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Configs.Gameplay.Ability
 {
-    [CreateAssetMenu(menuName = "Configs/Gameplay/Abilities/NewAbilityConfig", fileName = "AbilityConfig")]
-    public class AbilityConfig : ScriptableObject
+    public abstract class AbilityBaseConfig : ScriptableObject
     {
         [field: SerializeField] public string ID { get; private set; }
+        [field: SerializeField] public bool MainAbility { get; private set; }
         [field: SerializeField] public AbilityTypes Ability { get; private set; }
         [field: SerializeField] public string Description { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField] public CurrencyTypes Currency { get; private set; }
         [field: SerializeField] public int Amount { get; private set; }
-
     }
 }

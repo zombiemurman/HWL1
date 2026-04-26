@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Features.InputFeature;
 using Assets._Project.Develop.Runtime.Meta.Features.Wallet;
@@ -19,10 +20,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
 
         private IDisposable _setMineRequestDisposable;
 
+        private readonly MineAbilityConfig _config;
+
         public SetMineSystem(
-            EntitiesFactory entitiesFactory)
+            EntitiesFactory entitiesFactory, MineAbilityConfig config)
         {
             _entitiesFactory = entitiesFactory;
+            _config = config;
         }
 
         public void OnInit(Entity entity)
@@ -41,7 +45,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
         private void OnSetMine(Vector3 positionMine)
         {
             if(_canSetMine.Evaluate())
-                _entitiesFactory.CreateMine(positionMine);
+                _entitiesFactory.CreateMine(positionMine, _config);
         }
     }
 }

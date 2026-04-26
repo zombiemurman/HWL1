@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Entities;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
+using Assets._Project.Develop.Runtime.Configs.Gameplay.Entities;
 using Assets._Project.Develop.Runtime.Gameplay.Config;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
@@ -174,18 +175,18 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
-        public Entity CreatePuddleEntity(Vector3 position)
+        public Entity CreatePuddleEntity(Vector3 position, PuddleAbilityConfig config)
         {
             Entity entity = CreateEmpty();
 
-            _monoEntitiesFactory.Create(entity, position, "Entities/PuddleEntity");
+            _monoEntitiesFactory.Create(entity, position, config.PrefabPath);
 
             entity
                 .AddDebugText(new ReactiveVariable<string>("Puddle"))
                 .AddTeam(new ReactiveVariable<Teams>(Teams.MainHero))
                 .AddIsTouchAnotherTeam()
                 .AddIsTouchDeatMask()
-                .AddBodyContacDamage(new ReactiveVariable<float>(50))
+                .AddBodyContacDamage(new ReactiveVariable<float>(config.Damage))
                 .AddinAttackProcess(new ReactiveVariable<bool>(true))
                 .AddTakeDamageRequest()
                 .AddContactsDetectingMask(Layers.EnemyMask)
@@ -229,91 +230,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
-        public Entity CreateHeroEntity2(Vector3 position)
-        {
-            Entity entity = CreateEmpty();
-
-            _monoEntitiesFactory.Create(entity, position, "Entities/Hero");
-
-            entity
-                .AddMoveDirection()
-                .AddIsBullet()
-                .AddRotationDirection()
-                .AddMoveSpeed(new ReactiveVariable<float>(10))
-                .AddIsMoving()
-                .AddRotationSpeed(new ReactiveVariable<float>(900))
-                .AddMaxHealth(new ReactiveVariable<float>(100))
-                .AddCurrentHealth(new ReactiveVariable<float>(100))
-                .AddIsDead()
-                .AddTakeDamageRequest()
-                .AddAttackProcessInitialTime(new ReactiveVariable<float>(3))
-                .AddAttackProcessCurrentTime()
-                .AddinAttackProcess()
-                .AddStartAttackRequest()
-                .AddStartAttackEvent()
-                .AddEndAttackEvent()
-                .AddAttackDelayTime(new ReactiveVariable<float>(1))
-                .AddAttackDelayEndEvent()
-                .AddInstantAttackDamage(new ReactiveVariable<float>(50))
-                .AddAttackCancelEvent()
-                .AddAttackCooldownInitialTime(new ReactiveVariable<float>(2))
-                .AddAttackCooldownCurentTime()
-                .AddInAttackCooldown();
-
-            ICompositCondition canMove = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.IsDead.Value == false));
-
-            ICompositCondition canRotate = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.IsDead.Value == false));
-
-            ICompositCondition mustDie = new CompositeCondition()
-                            .Add(new FuncCondition(() => entity.CurrentHealth.Value <= 0));
-
-            ICompositCondition mustSelfReleased = new CompositeCondition()
-                            .Add(new FuncCondition(() => entity.IsDead.Value));
-                            //.Add(new FuncCondition(() => entity.InDeathProcess.Value == false));
-
-            ICompositCondition canApplyDamage = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.IsDead.Value == false));
-
-            ICompositCondition canStartAttack = new CompositeCondition()
-                .Add(new FuncCondition(() => entity.IsDead.Value == false))
-                .Add(new FuncCondition(() => entity.InAttackCooldown.Value == false))
-                .Add(new FuncCondition(() => entity.inAttackProcess.Value == false))
-                .Add(new FuncCondition(() => entity.IsMoving.Value == false));
-
-            ICompositCondition mustCancelAttack = new CompositeCondition(LogicOperations.Or)
-                .Add(new FuncCondition(() => entity.IsDead.Value))
-                .Add(new FuncCondition(() => entity.IsMoving.Value));
-
-            entity
-                .AddCanMove(canMove)
-                .AddCanRotate(canRotate)
-                .AddMustDie(mustDie)
-                .AddMustSelfReleased(mustSelfReleased)
-                .AddCanStartAttack(canStartAttack)
-                .AddMustCancelAttack(mustCancelAttack);
-
-            entity
-                .AddSystem(new RigidbodyMovementSystem())
-                .AddSystem(new RigidbodyRotationSystem())
-                .AddSystem(new AttackCancelSystem())
-                .AddSystem(new StartAttackExplosionSystem())
-                .AddSystem(new AttackProcessTimerSystem())
-                .AddSystem(new AttackDelayEndTriggerSystem())
-                .AddSystem(new InstantShootSystem(this))
-                .AddSystem(new EndAttackSystem())
-                .AddSystem(new AttackCooldownTimerSystem())
-                .AddSystem(new ApplyDamageSystem())
-                .AddSystem(new DeathSystem())
-                .AddSystem(new SelfRealeseSystem(_entitiesLifeContext));
-
-            _entitiesLifeContext.Add(entity);
-
-            return entity;
-        }
-
-        public Entity CreateProjectile(Vector3 position, Vector3 direction, float damage)
+        public Entity CreateProjectile(Vector3 position, Vector3 direction, BulletConfig config)
         {
             Entity entity = CreateEmpty();
 
@@ -322,7 +239,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             entity
                 .AddDebugText(new ReactiveVariable<string>("Projectile"))
                 .AddMoveDirection(new ReactiveVariable<Vector3>(direction))
-                .AddMoveSpeed(new ReactiveVariable<float>(10))
+                .AddMoveSpeed(new ReactiveVariable<float>(config.Speed))
                 .AddIsBullet(new ReactiveVariable<bool>(true))
                 .AddIsMoving()
                 .AddinAttackProcess(new ReactiveVariable<bool>(true))
@@ -333,7 +250,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddContactsDetectingMask(1 << LayerMask.NameToLayer("Characters"))
                 .AddContactCollidersBuffer(new Buffer<Collider>(64))
                 .AddContactEntitiesBuffer(new Buffer<Entity>(64))
-                .AddBodyContacDamage(new ReactiveVariable<float>(damage))
+                .AddBodyContacDamage(new ReactiveVariable<float>(config.Damage))
                 .AddDeathMask(1 << LayerMask.NameToLayer("Characters"))
                 .AddIsTouchDeatMask();
 
@@ -372,7 +289,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
-        public Entity CreateProjectileHero(Vector3 position, Vector3 direction, float damage)
+        public Entity CreateProjectileHero(Vector3 position, Vector3 direction, BulletConfig config)
         {
             Entity entity = CreateEmpty();
 
@@ -381,7 +298,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             entity
                 .AddDebugText(new ReactiveVariable<string>("ProjectileHero"))
                 .AddMoveDirection(new ReactiveVariable<Vector3>(direction))
-                .AddMoveSpeed(new ReactiveVariable<float>(10))
+                .AddMoveSpeed(new ReactiveVariable<float>(config.Speed))
                 .AddIsBullet(new ReactiveVariable<bool>(true))
                 .AddIsMoving()
                 .AddinAttackProcess(new ReactiveVariable<bool>(true))
@@ -392,7 +309,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddContactsDetectingMask(Layers.EnemyMask)
                 .AddContactCollidersBuffer(new Buffer<Collider>(64))
                 .AddContactEntitiesBuffer(new Buffer<Entity>(64))
-                .AddBodyContacDamage(new ReactiveVariable<float>(damage))
+                .AddBodyContacDamage(new ReactiveVariable<float>(config.Damage))
                 .AddDeathMask(Layers.EnemyMask)
                 .AddIsTouchDeatMask();
 
@@ -419,7 +336,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddSystem(new RigidbodyRotationSystem())
                 .AddSystem(new BodyContactsDetectingSystem())
                 .AddSystem(new BodyContactsEntitiesFilterSystem(_collidersRegistryService))
-                //.AddSystem(new BodyContactsEntitiesOnlyMainHeroSystem())
                 .AddSystem(new DealDamageOnContactSystem())
                 .AddSystem(new DeathMaskTouchDetectorSystem())
                 .AddSystem(new DeathSystem())
@@ -469,23 +385,22 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
-        public Entity CreateTurel(Vector3 position)
+        public Entity CreateTurel(Vector3 position, TurelAbilityConfig config)
         {
             Entity entity = CreateEmpty();
 
-            _monoEntitiesFactory.Create(entity, position, "Entities/TurelEntity");
+            _monoEntitiesFactory.Create(entity, position, config.PrefabPath);
 
             entity
                 .AddDebugText(new ReactiveVariable<string>("Turel"))
                 .AddStartAttackEvent()
                 .AddinAttackProcess()
                 .AddEndAttackEvent()
-                .AddAttackProcessInitialTime(new ReactiveVariable<float>(1))
+                .AddAttackProcessInitialTime(new ReactiveVariable<float>(config.InitialTime))
                 .AddAttackProcessCurrentTime()
-                .AddAttackCooldownInitialTime(new ReactiveVariable<float>(1))
+                .AddAttackCooldownInitialTime(new ReactiveVariable<float>(config.Cooldown))
                 .AddAttackCooldownCurentTime()
-                .AddAttackDelayTime(new ReactiveVariable<float>(1))
-                .AddInstantAttackDamage(new ReactiveVariable<float>(150))
+                .AddAttackDelayTime(new ReactiveVariable<float>(config.DelayTime))
                 .AddAttackDelayEndEvent()
                 .AddAttackCancelEvent()
                 .AddInAttackCooldown()
@@ -493,8 +408,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddRotationDirection()
                 .AddCurrentTarget()
                 .AddStartAttackRequest()
-                .AddRotationSpeed(new ReactiveVariable<float>(600))
-                .AddRadiusAttack(new ReactiveVariable<float>(5))
+                .AddRotationSpeed(new ReactiveVariable<float>(config.RotationSpeed))
+                .AddRadiusAttack(new ReactiveVariable<float>(config.Radius))
                 .AddContactsDetectingMask(Layers.EnemyMask)
                 .AddContactCollidersBuffer(new Buffer<Collider>(64))
                 .AddContactEntitiesBuffer(new Buffer<Entity>(64));
@@ -511,7 +426,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddSystem(new StartAttackRequestSystem())
                 .AddSystem(new AttackProcessTimerSystem())
                 .AddSystem(new AttackDelayEndTriggerSystem())
-                .AddSystem(new InstantShootForwardSystem(this))
+                .AddSystem(new InstantShootForwardSystem(this, config.BulletConfig))
                 .AddSystem(new EndAttackSystem())
                 .AddSystem(new AttackCooldownTimerSystem()); ;
 
@@ -520,11 +435,11 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
-        public Entity CreateMine(Vector3 position)
+        public Entity CreateMine(Vector3 position, MineAbilityConfig config)
         {
             Entity entity = CreateEmpty();
 
-            _monoEntitiesFactory.Create(entity, position, "Entities/Bomb");
+            _monoEntitiesFactory.Create(entity, position, config.PrefabPath);
 
             entity
                 .AddDebugText(new ReactiveVariable<string>("Mine"))
@@ -533,13 +448,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddEndAttackBombEvent()
                 .AddInBombTimeProcess()
                 .AddExplosionPoint()
-                .AddInitialTimeBomb(new ReactiveVariable<float>(1))
+                .AddInitialTimeBomb(new ReactiveVariable<float>(config.Time))
                 .AddCurrentTimeBomb()
                 .AddStartAttackRequest()
                 .AddStartAttackEvent()
                 .AddinAttackProcess()
-                .AddDamageAttack(new ReactiveVariable<float>(120))
-                .AddRadiusAttack(new ReactiveVariable<float>(2))
+                .AddDamageAttack(new ReactiveVariable<float>(config.Damage))
+                .AddRadiusAttack(new ReactiveVariable<float>(config.Radius))
                 .AddContactsDetectingMask(Layers.EnemyMask)
                 .AddContactCollidersBuffer(new Buffer<Collider>(64))
                 .AddContactEntitiesBuffer(new Buffer<Entity>(64));
@@ -566,7 +481,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
-        public Entity CreateExplosionAbility()
+        public Entity CreateExplosionAbility(ExplosionAbilityConfig config)
         {
             Entity entity = CreateEmpty();
 
@@ -578,10 +493,10 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddStartAttackEvent()
                 .AddEndAttackEvent()
                 .AddinAttackProcess()
-                .AddExplosionRadius(new ReactiveVariable<float>(5))
-                .AddExplosionDamage(new ReactiveVariable<float>(50))
+                .AddExplosionRadius(new ReactiveVariable<float>(config.Radius))
+                .AddExplosionDamage(new ReactiveVariable<float>(config.Damage))
                 .AddExplosionPoint()
-                .AddAttackCooldownInitialTime(new ReactiveVariable<float>(0.5f))
+                .AddAttackCooldownInitialTime(new ReactiveVariable<float>(config.Cooldown))
                 .AddAttackCooldownCurentTime()
                 .AddInAttackCooldown()
                 .AddContactsDetectingMask(Layers.EnemyMask)
@@ -610,7 +525,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
             return entity;
         }
 
-        public Entity CreateInstallMineAbility()
+        public Entity CreateInstallMineAbility(MineAbilityConfig config)
         {
             Entity entity = CreateEmpty();
 
@@ -625,14 +540,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddCanSetMine(canSetMine);
 
             entity
-                .AddSystem(new SetMineSystem(this));
+                .AddSystem(new SetMineSystem(this, config));
 
             _entitiesLifeContext.Add(entity);
 
             return entity;
         }
 
-        public Entity CreateInstallTurelAbility()
+        public Entity CreateInstallTurelAbility(TurelAbilityConfig config)
         {
             Entity entity = CreateEmpty();
 
@@ -647,14 +562,14 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddCanSetMine(canSetMine);
 
             entity
-                .AddSystem(new SetTurelSystem(this, _container.Resolve<BrainsFactory>()));
+                .AddSystem(new SetTurelSystem(this, _container.Resolve<BrainsFactory>(), config));
 
             _entitiesLifeContext.Add(entity);
 
             return entity;
         }
 
-        public Entity CreateInstallPuddleAbility()
+        public Entity CreateInstallPuddleAbility(PuddleAbilityConfig config)
         {
             Entity entity = CreateEmpty();
 
@@ -669,7 +584,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddCanSetMine(canSetMine);
 
             entity
-                .AddSystem(new SetPuddleSystem(this));
+                .AddSystem(new SetPuddleSystem(this, config));
 
             _entitiesLifeContext.Add(entity);
 
@@ -693,7 +608,6 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddAttackCooldownInitialTime(new ReactiveVariable<float>(config.Cooldown))
                 .AddAttackCooldownCurentTime()
                 .AddAttackDelayTime(new ReactiveVariable<float>(config.Delay))
-                .AddInstantAttackDamage(new ReactiveVariable<float>(config.Damage))
                 .AddAttackDelayEndEvent()
                 .AddAttackCancelEvent()
                 .AddInAttackCooldown();
@@ -711,7 +625,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.EntitiesCore
                 .AddSystem(new StartAttackSystem())
                 .AddSystem(new AttackProcessTimerSystem())
                 .AddSystem(new AttackDelayEndTriggerSystem())
-                .AddSystem(new InstantShootSystem(this))
+                .AddSystem(new InstantShootSystem(this, config.BulletConfig))
                 .AddSystem(new EndAttackSystem())
                 .AddSystem(new AttackCooldownTimerSystem());
 

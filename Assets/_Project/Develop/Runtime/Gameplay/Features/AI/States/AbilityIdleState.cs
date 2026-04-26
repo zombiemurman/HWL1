@@ -86,7 +86,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.AI.States
                 _setMineRequest = setMineRequest;
                 _abilityActive = abilityActive;
 
-                AbilityConfig abilityConfig =  _abilitiesConfigsContainer.GetConfigBy(abilityTipes);
+                AbilityBaseConfig abilityConfig =  _abilitiesConfigsContainer.GetConfigBy(abilityTipes);
 
                 _currencyTypes = abilityConfig.Currency;
                 _price = abilityConfig.Amount;

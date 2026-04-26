@@ -15,4 +15,5 @@ MonoBehaviour:
   <AttackProcessTime>k__BackingField: 1
   <Cooldown>k__BackingField: 2
   <Delay>k__BackingField: 0.3
-  <Damage>k__BackingField: 10
+  <BulletConfig>k__BackingField: {fileID: 11400000, guid: 453b05b0380ded2499a450b7e1ff4b98,
+    type: 2}

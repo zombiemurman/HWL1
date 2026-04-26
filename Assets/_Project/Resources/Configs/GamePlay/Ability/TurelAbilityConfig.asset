@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc94e416a9293074fa3880a30c6c0e44, type: 3}
+  m_Name: TurelAbilityConfig
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField: Turret
+  <MainAbility>k__BackingField: 0
+  <Ability>k__BackingField: 2
+  <Description>k__BackingField: Turret
+  <Icon>k__BackingField: {fileID: 21300000, guid: 8ad48adf1f6b2474495ff31c8ff00960,
+    type: 3}
+  <Currency>k__BackingField: 1
+  <Amount>k__BackingField: 5
+  <PrefabPath>k__BackingField: Entities/TurelEntity
+  <Damage>k__BackingField: 10
+  <Radius>k__BackingField: 3
+  <Cooldown>k__BackingField: 1
+  <InitialTime>k__BackingField: 1
+  <DelayTime>k__BackingField: 1
+  <RotationSpeed>k__BackingField: 500
+  <SpeedBullet>k__BackingField: 0
+  <BulletConfig>k__BackingField: {fileID: 11400000, guid: a8e7b63c0b1d79d4a8d28a28909eabb2,
+    type: 2}

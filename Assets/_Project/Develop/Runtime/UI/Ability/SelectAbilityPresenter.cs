@@ -13,19 +13,21 @@ namespace Assets._Project.Develop.Runtime.UI.Ability
         private readonly MainHeroHolderService _mainHeroHolderService;
         private readonly CurrencyIconsConfig _currencyIconsConfig;
 
+        private readonly AbilityBaseConfig _abilityBaseConfig;
+
         public SelectAbilityPresenter(
             SelectAbillityView view,
-            AbilityConfig abilityConfig,
+            AbilityBaseConfig abilityConfig,
             MainHeroHolderService mainHeroHolderService,
             CurrencyIconsConfig currencyIconsConfig)
         {
             View = view;
-            AbilityConfig = abilityConfig;
+            _abilityBaseConfig = abilityConfig;
             _mainHeroHolderService = mainHeroHolderService;
             _currencyIconsConfig = currencyIconsConfig;
         }
 
-        public AbilityConfig AbilityConfig { get; }
+        public AbilityBaseConfig AbilityConfig => _abilityBaseConfig;
 
         public SelectAbillityView View { get; }
 

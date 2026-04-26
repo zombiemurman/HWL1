@@ -4,6 +4,7 @@ using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Mono;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityPermanent;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Gameplay.Features.Enemies;
 using Assets._Project.Develop.Runtime.Gameplay.Features.inputfeature;
@@ -61,6 +62,12 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Infrastructure
             container.RegisterAsSingle(CreateMainHeroFactory);
             container.RegisterAsSingle(CreateEnemiesFactory);
             container.RegisterAsSingle(CreateAbilityPermanentFactory);
+            container.RegisterAsSingle(CreateAbilityEntityFactory);
+        }
+
+        private static AbilityEntityFactory CreateAbilityEntityFactory(DIContainer container)
+        {
+            return new AbilityEntityFactory(container);
         }
 
         private static AbilityPermanentFactory CreateAbilityPermanentFactory(DIContainer container)

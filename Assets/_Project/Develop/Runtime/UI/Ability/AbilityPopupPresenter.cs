@@ -44,8 +44,11 @@ namespace Assets._Project.Develop.Runtime.UI.Ability
         {
             base.Initialize();
 
-            foreach(AbilityConfig abilityConfig in _configContainer.AbilityConfigs)
+            foreach(AbilityBaseConfig abilityConfig in _configContainer.AbilityConfigs)
             {
+                if(abilityConfig.MainAbility)
+                    continue;
+
                 SelectAbillityView selectAbillityView = _viewsFactory.Create<SelectAbillityView>(ViewIDs.SelectAbillityView);
                 
                 _view.AbilityListView.Add(selectAbillityView);

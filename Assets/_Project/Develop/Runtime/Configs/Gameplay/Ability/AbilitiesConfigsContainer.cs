@@ -8,11 +8,11 @@ namespace Assets._Project.Develop.Runtime.Configs.Gameplay.Ability
     [CreateAssetMenu(menuName = "Configs/Gameplay/Abilities/AbilitiesConfigsContainer", fileName = "AbilitiesConfigsContainer")]
     public class AbilitiesConfigsContainer : ScriptableObject
     {
-        [SerializeField] private List<AbilityConfig> _abilityConfigs;
+        [SerializeField] private List<AbilityBaseConfig> _abilityConfigs;
 
-        public IReadOnlyList<AbilityConfig> AbilityConfigs => _abilityConfigs;
+        public IReadOnlyList<AbilityBaseConfig> AbilityConfigs => _abilityConfigs;
 
-        public AbilityConfig GetConfigBy(string ID) => _abilityConfigs.First(config => config.ID == ID);
-        public AbilityConfig GetConfigBy(AbilityTypes types) => _abilityConfigs.First(config => config.Ability == types);
+        public AbilityBaseConfig GetConfigBy(string ID) => _abilityConfigs.First(config => config.ID == ID);
+        public AbilityBaseConfig GetConfigBy(AbilityTypes types) => _abilityConfigs.First(config => config.Ability == types);
     }
 }

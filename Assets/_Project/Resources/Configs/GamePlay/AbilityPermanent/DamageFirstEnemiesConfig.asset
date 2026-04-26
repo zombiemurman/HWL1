@@ -15,8 +15,9 @@ MonoBehaviour:
   <ID>k__BackingField: DamageFirstEntities
   <Name>k__BackingField: DamageFirstEntities
   <Description>k__BackingField: Damage First Entities
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: 21300000, guid: e0337559183924e36a4018e31474a794,
+    type: 3}
   <Currency>k__BackingField: 1
   <Price>k__BackingField: 5
-  <Damage>k__BackingField: 5
+  <Damage>k__BackingField: 20
   <CountEnemies>k__BackingField: 3

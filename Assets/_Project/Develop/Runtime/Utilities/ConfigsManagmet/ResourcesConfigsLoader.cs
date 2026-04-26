@@ -1,3 +1,4 @@
+using Assets._Project.Develop.Runtime.Configs.Gameplay;
 using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
 using Assets._Project.Develop.Runtime.Configs.Gameplay.AbilityPermanent;
 using Assets._Project.Develop.Runtime.Configs.Gameplay.Levels;
@@ -27,6 +28,7 @@ namespace Assets._Project.Develop.Runtime.Utilities.ConfigsManagmet
             {typeof(LevelsListConfig), "Configs/Gameplay/Levels/LevelsListConfig" },
             {typeof(AbilitiesConfigsContainer), "Configs/GamePlay/Ability/AbilitiesConfigsContainer" },
             {typeof(AbilityPermanentConfigsContainer), "Configs/GamePlay/AbilityPermanent/AbilityPermanentConfigsContainer" },
+            {typeof(GameplaySettingsConfig), "Configs/GamePlay/GameplaySettingsConfig" },
         };
 
         public ResourcesConfigsLoader(ResourcesAssetsLoader resources)

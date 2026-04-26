@@ -1,10 +1,12 @@
-﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.AbilityPermanent;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
+using Assets._Project.Develop.Runtime.Configs.Gameplay.AbilityPermanent;
 using Assets._Project.Develop.Runtime.Configs.Gameplay.Entities;
 using Assets._Project.Develop.Runtime.Configs.Gameplay.Levels;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.AbilityPermanent;
+using Assets._Project.Develop.Runtime.Gameplay.Features.AbilityFeatures.EntityAbility;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
 using Assets._Project.Develop.Runtime.Gameplay.Features.TeamsFeature;
@@ -35,6 +37,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
 
         private readonly AbilityPermanentProviderService _abilityPermanentProviderService;
 
+        private readonly AbilityEntityFactory _abilityEntityFactory;
+
 
         public MainHeroFactory(DIContainer container)
         {
@@ -50,6 +54,8 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
             _abilityPermanentFactory = _container.Resolve<AbilityPermanentFactory>();
 
             _abilityPermanentProviderService = _container.Resolve<AbilityPermanentProviderService>();
+
+            _abilityEntityFactory = _container.Resolve<AbilityEntityFactory>();
         }
 
         public Entity Create(Vector3 position, int levelNumber)
@@ -58,10 +64,13 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.MainHero
 
             Entity entity = _entitiesFactory.CreateHeroEntity(position, config);
 
-            _entitiesFactory.AddAbility(entity, AbilityTypes.Explosion, _entitiesFactory.CreateExplosionAbility());
-            _entitiesFactory.AddAbility(entity, AbilityTypes.Mine, _entitiesFactory.CreateInstallMineAbility());
-            _entitiesFactory.AddAbility(entity, AbilityTypes.Turret, _entitiesFactory.CreateInstallTurelAbility());
-            _entitiesFactory.AddAbility(entity, AbilityTypes.Puddle, _entitiesFactory.CreateInstallPuddleAbility());
+            foreach (AbilityBaseConfig abilityConfig in config.Ability.AbilityConfigs)
+                _entitiesFactory.AddAbility(entity, abilityConfig.Ability, _abilityEntityFactory.CreateAbilytyBy(abilityConfig));
+
+            //_entitiesFactory.AddAbility(entity, AbilityTypes.Explosion, _entitiesFactory.CreateExplosionAbility());
+            //_entitiesFactory.AddAbility(entity, AbilityTypes.Mine, _entitiesFactory.CreateInstallMineAbility());
+            //_entitiesFactory.AddAbility(entity, AbilityTypes.Turret, _entitiesFactory.CreateInstallTurelAbility());
+            //_entitiesFactory.AddAbility(entity, AbilityTypes.Puddle, _entitiesFactory.CreateInstallPuddleAbility());
 
             entity
                 .AddAbilitiesPermanents();

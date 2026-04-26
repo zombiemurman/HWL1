@@ -1,4 +1,5 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using System;
@@ -12,21 +13,21 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack.Shoot
 
         private ReactiveEvent _attackDelayEndEvent;
 
-        private ReactiveVariable<float> _damage;
-
         private Transform _shootPoint;
 
         private IDisposable _attackDelayEndDisposable;
 
-        public InstantShootSystem(EntitiesFactory entitiesFactory)
+        private readonly BulletConfig _config;
+
+        public InstantShootSystem(EntitiesFactory entitiesFactory, BulletConfig config)
         {
             _entitiesFactory = entitiesFactory;
+            _config = config;
         }
 
         public void OnInit(Entity entity)
         {
             _attackDelayEndEvent = entity.AttackDelayEndEvent;
-            _damage = entity.InstantAttackDamage;
             _shootPoint = entity.ShootPoint;
 
             _attackDelayEndDisposable = _attackDelayEndEvent.Subscribe(OnAttackDelayEnd);
@@ -39,8 +40,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack.Shoot
 
         private void OnAttackDelayEnd()
         {
-            //Vector3 direction = (Vector3.zero - _shootPoint.position).normalized;
-            _entitiesFactory.CreateProjectile(_shootPoint.position, _shootPoint.forward, _damage.Value);
+            _entitiesFactory.CreateProjectile(_shootPoint.position, _shootPoint.forward, _config);
         }
     }
 }

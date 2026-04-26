@@ -1,10 +1,12 @@
-﻿using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
+﻿using Assets._Project.Develop.Runtime.Configs.Gameplay.Ability;
+using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore;
 using Assets._Project.Develop.Runtime.Gameplay.EntitiesCore.Systems;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI;
 using Assets._Project.Develop.Runtime.Gameplay.Features.AI.States;
 using Assets._Project.Develop.Runtime.Utilities.Conditions;
 using Assets._Project.Develop.Runtime.Utilities.Reactive;
 using System;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
@@ -21,11 +23,16 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
 
         private IDisposable _setMineRequestDisposable;
 
+        private readonly TurelAbilityConfig _config;
+
         public SetTurelSystem(
-            EntitiesFactory entitiesFactory, BrainsFactory brainsFactory)
+            EntitiesFactory entitiesFactory, 
+            BrainsFactory brainsFactory, 
+            TurelAbilityConfig config)
         {
             _entitiesFactory = entitiesFactory;
             _brainsFactory = brainsFactory;
+            _config = config;
         }
 
         public void OnInit(Entity entity)
@@ -45,7 +52,7 @@ namespace Assets._Project.Develop.Runtime.Gameplay.Features.Attack
         {
             if (_canSetMine.Evaluate())
             {
-                Entity entity = _entitiesFactory.CreateTurel(positionMine);
+                Entity entity = _entitiesFactory.CreateTurel(positionMine, _config);
                 _brainsFactory.CreateMTurelBrain(entity, new NearestDamageableTargetSelector(entity));
             }
                 

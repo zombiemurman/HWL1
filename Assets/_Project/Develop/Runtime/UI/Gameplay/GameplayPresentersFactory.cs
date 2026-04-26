@@ -100,7 +100,7 @@ namespace Assets._Project.Develop.Runtime.UI.Gameplay
 
         public SelectAbilityPresenter CreateSelectAbilityPresenter(
             SelectAbillityView view,
-            AbilityConfig abilityConfig)
+            AbilityBaseConfig abilityConfig)
         {
             return new SelectAbilityPresenter(
                view,

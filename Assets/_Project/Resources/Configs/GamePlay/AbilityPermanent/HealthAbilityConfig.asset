@@ -15,7 +15,8 @@ MonoBehaviour:
   <ID>k__BackingField: HealthHeroPercent
   <Name>k__BackingField: HealthHeroPercent
   <Description>k__BackingField: Health Hero Percent
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: 21300000, guid: b943c11315c4941d59b2ea9dbbdbd859,
+    type: 3}
   <Currency>k__BackingField: 0
   <Price>k__BackingField: 10
   <HealthPercent>k__BackingField: 1.2
